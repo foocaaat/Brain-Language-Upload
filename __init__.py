@@ -73,9 +73,9 @@ def run_mpv_commandunix():
     # Check if the command is already running
     result = subprocess.run(["pgrep", "-f", "mpvplayer.sh"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.stdout == b'':
-        os.system("$(" + script_dir +  "/mpvplayer.sh ) &")
+        os.system("$(" + script_dir +  "/linux/mpvplayer.sh ) &")
         time.sleep(1)
-        os.system("$(" + script_dir +  "/mpvanki.sh black.png) &")
+        os.system("$(" + script_dir +  "/linux/mpvanki.sh black.png) &")
         time.sleep(1)
 
 from datetime import timedelta
@@ -108,7 +108,7 @@ def run_command_field(num=0):
 #            os.system("mpvanki " + command + " e &")
 #        else:
         run_mpv_commandunix()
-        os.system("$(" + script_dir +  "/mpvanki.sh " + note["mpvanki-filename"] + " " + note["mpvanki-start"] + " " + note["mpvanki-end"] + " " + note["mpvanki-number"] + " " + new + " " + sub + ") &")
+        os.system("$(" + script_dir +  "/linux/mpvanki.sh " + note["mpvanki-filename"] + " " + note["mpvanki-start"] + " " + note["mpvanki-end"] + " " + note["mpvanki-number"] + " " + new + " " + sub + ") &")
 
 def ansae(ansa):
     card = mw.reviewer.card
