@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mpv --alang=jpn,kor --idle --slang=en,eng --no-input-cursor --no-input-default-bindings --no-cache --input-ipc-server=/tmp/mpv-socket --no-config --script-opts=osc-timems=yes --keep-open=yes --keep-open-pause=no  --sub-ass-style-override= --osd-bar-align-y=0.92 --sub-scale=1 --sub-font=Roboto --sub-color="#ffffffff" --sub-back-color="#aa000000" --sub-border-color="#aa000000" --sub-border-size=0.75 --sub-font-size=40 --sub-bold=no --sub-italic=no --sub-ass-style-override=force --sub-margin-y=30 --sub-margin-x=60 --sub-ass-force-style="PlayResX=1280,PlayResY=720,Name=Default,Fontname=Liberation Sans Narrow,Fontsize=32,PrimaryColour=&H00ffffff,BackColour=&H00000000,OutlineColour=&H00000000,Bold=1,Italic=0,Alignment=2,BorderStyle=3,Outline=0.3,Shadow=0,MarginL=60,MarginR=60,MarginV=30"
+
