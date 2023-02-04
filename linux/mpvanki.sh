@@ -16,10 +16,6 @@ d="$(echo $d | sed 's/^0*//')"
 file=".cache/mpvanki"
 file2=".cache/$1mpvanki"
 
-# if [ "$5" == "yes" ]; then
-#     espeak yes
-# fi
-
 var1=$(awk '{print $1}' $file)
 var2=$(awk '{print $2}' $file)
 var3=$(awk '{print $3}' $file)
@@ -27,7 +23,6 @@ var4=$(awk '{print $4}' $file)
 START=$(time_in_seconds $2)
 END=$(time_in_seconds $3)
 
-socee="socat - /tmp/mpv-socket"
 
 # Convert the time format from minutes.seconds.miliseconds to seconds
 
@@ -37,14 +32,15 @@ number="$(echo $4 | sed 's/^0*//')"
 
 var5=$(awk '{print $1}' $file2)
 
+socee="socat - /tmp/mpv-socket"
 
 if [ "1" == "$6" ];then
 echo '{"command": ["set_property", "sub-visibility", true]}' | $socee 
 else
 echo '{"command": ["set_property", "sub-visibility", false]}' | $socee 
 fi
-if [ "$(echo '{ "command": ["get_property", "path"] }' | $socee | jq '.data' | tr -d '"')" != ".local/share/AnkiVideo/$1" ]; then
-echo '{ "command": ["loadfile", "'.local/share/AnkiVideo/$1'"] }' | $socee
+if [ "$(echo '{ "command": ["get_property", "path"] }' | $socee | jq '.data' | tr -d '"')" != "$HOME/.local/share/AnkiVideo/$1" ]; then
+echo '{ "command": ["loadfile", "'$HOME/.local/share/AnkiVideo/$1'"] }' | $socee
 while true; do
     stream=$(echo '{ "command": ["get_property", "stream-pos"] }' | $socee | jq '.data' | tr -d '"')
     if [ "$stream" -gt 0 ]; then
