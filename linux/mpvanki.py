@@ -1,8 +1,17 @@
 #!/usr/bin/python3
 import os
-script_dir = os.path.dirname(os.path.abspath(__file__))
 import sys
 import subprocess
+import time
+
+from python_mpv_jsonipc import MPV
+
+mpv = MPV(start_mpv=False, ipc_socket="/tmp/mpv-socket")
+
+
+
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def time_in_seconds(time):
@@ -10,9 +19,7 @@ def time_in_seconds(time):
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
 
-import os
-import time
-
+#vvvvvvvvvvvvv
 ankivideo="/home/foocaaat/.local/share/AnkiVideo/"
 
 def mpvankii(v1, v2, v3, v4, v5, v6):
@@ -46,6 +53,15 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
             var3 = float(0)
             var4 = int(0)
     except FileNotFoundError: open(file, "w").close()
+
+    if not os.path.exists(file):
+        with open(file, 'w') as f:
+                f.write(f"{v1} {START} {END} {number}")
+                f.close()
+    if not os.path.exists(file2):
+        with open(file2, 'w') as f:
+                f.write(f"{END}")
+                f.close()
     try:
         with open(file2, "r") as f:
             line = f.readline().strip()
@@ -60,51 +76,50 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
 
 
     if "1" == v6:
-        os.system("echo '{\"command\":[\"set_property\", \"sub-visibility\", true]}' | socat - /tmp/mpv-socket") 
+        mpv.command("set_property", "sub-visibility", True)
     else:
-        os.system("echo '{\"command\":[\"set_property\", \"sub-visibility\", false]}' | socat - /tmp/mpv-socket") 
+        mpv.command("set_property", "sub-visibility", False)
 
 
-    workingfile=os.popen("echo '{\"command\":[\"get_property\", \"path\"]}' | socat - /tmp/mpv-socket | jq '.data' | tr -d '\"' ").read()
-    if str(workingfile) != ankivideo + v1 + "\n":
-        os.system("echo '{\"command\":[\"loadfile\", \"" + ankivideo + v1 + "\"]}' | socat - /tmp/mpv-socket") 
+    workingfile=str(mpv.command("get_property", "path"))
+    if str(workingfile) != ankivideo + v1:
+        mpv.command("loadfile", ankivideo + v1)
 
     while True:
-        stream=os.popen("echo '{\"command\":[\"get_property\", \"stream-pos\"]}' | socat - /tmp/mpv-socket | jq '.data' | tr -d '\"' ").read()
+        stream=str(mpv.command("get_property", "stream-pos"))
         try:
             if int(stream) > 0:
                 break
         except: pass
 ###
 
-
     if var1 == v1 and var4 == number - 1 and var3 < START: 
-        print("e")
+        pass
     else:
         if v5 == "yes" and number == 1 and var4 != 1:
-            os.system("echo '{\"command\":[\"seek\", \'0\', \"absolute\"]}' | socat - /tmp/mpv-socket") 
+            mpv.command("seek", 0, "absolute")
         else:
-            print(var5)
             if v5 == "yes" and var5 < START and var5 != 0.0:
 
-                os.system("echo '{\"command\":[\"seek\", \'" + str(var5) + "', \"absolute\"]}' | socat - /tmp/mpv-socket") 
+                mpv.command("seek", str(var5), "absolute")
             else:
-                os.system("echo '{\"command\":[\"seek\", \'" + str(START) + "', \"absolute\"]}' | socat - /tmp/mpv-socket") 
+                mpv.command("seek", str(START), "absolute")
 
-    os.system("echo '{\"command\":[\"set_property\", \"pause\", false]}' | socat - /tmp/mpv-socket") 
+    mpv.command("set_property", "pause", False)
+
     
 
     with open(file, 'w') as f:
             f.write(f"{v1} {START} {END} {number}")
+            f.close()
     with open(file2, 'w') as f:
             f.write(f"{END}")
+            f.close()
 
     while True:
-        position=os.popen("echo '{\"command\":[\"get_property\", \"time-pos\"]}' | socat - /tmp/mpv-socket | jq '.data' | tr -d '\"' ").read()
+        position=str(mpv.command("get_property", "time-pos"))
         if float(position) >= float(END):
-            print(float(position))
-            print(float(END))
-            os.system("echo '{\"command\":[\"set_property\", \"pause\", true]}' | socat - /tmp/mpv-socket") 
+            mpv.command("set_property", "pause", True)
             break
         time.sleep(0.05)
 
@@ -134,6 +149,6 @@ try:
 except:
     a6 = "0"
 
-result = subprocess.run(["pgrep", "-f", "mpvplayer.sh"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-if result.stdout != b'':
-    mpvankii(a1, a2, a3, a4, a5, a6)
+
+mpvankii(a1, a2, a3, a4, a5, a6)
+mpv.terminate()

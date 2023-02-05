@@ -102,7 +102,7 @@ def run_command_field(num=0):
     note = mw.reviewer.card.note()
     # Check if a field called "Command" exists
     if "mpvanki-filename" in note:
-        os.system("pkill mpvanki")
+        os.system("pkill mpvanki.py")
         dueToday()  # formeeeeeeeeeee
 #        if num == 1:
 #            os.system("mpvanki " + command + " e &")
