@@ -761,7 +761,6 @@ def time_in_seconds(time):
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
-
 def mpvankii(v1, v2, v3, v4, v5, v6):
     mpv = MPV(start_mpv=False, ipc_socket="/tmp/mpv-socket")
     if not v5:
@@ -857,12 +856,18 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
             f.write(f"{END}")
             f.close()
 
+    pao = 0 
     while True:
         position=str(mpv.command("get_property", "time-pos"))
         if float(position) >= float(END):
             mpv.command("set_property", "pause", True)
             break
+        if float(position) < float(pao):
+            break
+        pao = float(position) 
         time.sleep(0.05)
+global process2
+process2 = 1
 def run_command_field(num=0):
     global ansa
     ansa = 3
@@ -891,15 +896,17 @@ def run_command_field(num=0):
         global mpv
         try:
             mpv = MPV(start_mpv=False, ipc_socket="/tmp/mpv-socket")
-            mpv.command("set_property", "sub-visibility", True)
+            mpv.command("set_property", "sub-visibility", False)
         except:
             mpv = MPV(start_mpv=True, ipc_socket="/tmp/mpv-socket")
 
+        global process2
+        if process2 != 1:
+            process2.kill()
         process = multiprocessing.Process(target=mpvankii, args=( note["mpvanki-filename"], note["mpvanki-start"], note["mpvanki-end"], note["mpvanki-number"], new, sub))
-        try:
-            process.kill()
-        except:
-            process.start()
+        process2 = process
+        process.start()
+
 
 
 def ansae(ansa):
