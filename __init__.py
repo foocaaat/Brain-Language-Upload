@@ -39,6 +39,7 @@ import subprocess
 import os
 from anki.hooks import wrap, addHook
 from anki import version as ankiversion
+from python_mpv_jsonipc import MPV
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
