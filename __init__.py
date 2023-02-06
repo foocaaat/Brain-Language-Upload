@@ -22,6 +22,8 @@ SHORTCUT_START1 = "Z"
 SHORTCUT_START2 = "X"
 SHOWER = "Down"
 ANSWER = "Right"
+HALFSHOW = "Up"
+
 # Shortcut that will reveal all hint fields at once:
 ansa = 0
 SHORTCUT_END1 = ","
@@ -34,13 +36,97 @@ from aqt import mw
 from aqt.reviewer import Reviewer
 import time
 from anki import hooks
+import anki
 from anki.template import TemplateRenderContext
 import subprocess
 import os
 from anki.hooks import wrap, addHook
 from anki import version as ankiversion
 import multiprocessing
+from datetime import timedelta
+from aqt.qt import QToolTip, QCursor
+from anki.schedv2 import * 
 
+####################
+old_fillRev = anki.schedv2.Scheduler._fillRev
+is_old_fillRev = True
+
+
+def  new_fillRev(self, recursing=False) -> bool:
+        "True if a review card can be fetched."
+        if self._revQueue:
+            return True
+        if not self.revCount:
+            return False
+
+        lim = min(self.queueLimit, self._currentRevLimit())
+        if lim:
+            self._revQueue = self.col.db.list(
+                f"""
+select id from cards where
+did in %s and queue = {QUEUE_TYPE_REV} and due <= ?
+order by nid
+limit ?"""
+# order by due, random()
+                % self._deckLimit(),
+                self.today,
+                lim,
+            )
+
+            if self._revQueue:
+                # preserve order
+                self._revQueue.reverse()
+                return True
+
+        return False
+
+from PyQt5.QtWidgets import QApplication, QFileDialog
+import platform
+
+def videofilelocation():
+    operating_system = platform.system()
+    if operating_system == "Windows":
+        result = subprocess.run(["explorer.exe", "/select,", "."], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(result.stdout.decode(), result.stderr.decode())
+    elif operating_system == "Linux":
+        directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
+        with open("ankivideo.log", 'w') as f:
+                f.write(f"{directory}")
+                f.close()
+        with open("ankivideo.log", "r") as f:
+            line = f.readline().strip()
+            global ankivideo
+            ankivideo = line.split()[0]
+
+    else:
+        print("Unsupported operating system")
+
+def created_order_on_off():
+    if is_old_fillRev == True:
+        anki.schedv2.Scheduler._fillRev = new_fillRev
+        is_old_fillRev == False
+    else:
+        anki.schedv2.Scheduler._fillRev = old_fillRev
+        is_old_fillRev == True
+
+created_order_on_off()
+# create a new menu item, "test"
+action = QAction("On - Off Review Created Order", mw)
+action2 = QAction("Select videos location", mw)
+# set it to call testFunction when it's clicked
+action.triggered.connect(created_order_on_off)
+action2.triggered.connect(videofilelocation)
+# and add it to the tools menu
+mw.form.menuTools.addAction(action)
+mw.form.menuTools.addAction(action2)
+
+
+######################
+######################
+######################
+######################
+######################
+######################
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -752,16 +838,22 @@ class MPV:
 ########################
 
 
-from datetime import timedelta
-from aqt.qt import QToolTip, QCursor
-
-ankivideo="/home/foocaaat/.local/share/AnkiVideo/"
+try:
+    with open("ankivideo.log", "r") as f:
+        line = f.readline().strip()
+        global ankivideo
+        ankivideo = line.split()[0]
+except:
+    with open("ankivideo.log", 'w') as f:
+            f.write(f"{script_dir}")
+            f.close()
 
 def time_in_seconds(time):
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
 def mpvankii(v1, v2, v3, v4, v5, v6):
+    global ankivideo
     mpv = MPV(start_mpv=False, ipc_socket="/tmp/mpv-socket")
     if not v5:
         v5=0
@@ -769,7 +861,7 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
         v6=0
 
     file=script_dir +"/mpvanki.log"
-    file2=script_dir + "/" + v1 +  "mpvanki.log"
+    file2=script_dir + os.path.basename(v1) +  "mpvanki.log"
 
     START=float(time_in_seconds(v2))
     END=float(time_in_seconds(v3))
@@ -792,7 +884,22 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
             var2 = float(0)
             var3 = float(0)
             var4 = int(0)
-    except FileNotFoundError: open(file, "w").close()
+    except:
+        with open(file, 'w') as f:
+                f.write(f"{v1} {START} {END} {number}")
+                f.close()
+
+    try:
+        with open(file2, "r") as f:
+            line = f.readline().strip()
+        if line:
+            var5 = float(line.split()[0])
+        else:
+            var5 = float(0)
+    except:
+        with open(file2, 'w') as f:
+                f.write(f"{END}")
+                f.close()
 
     if not os.path.exists(file):
         with open(file, 'w') as f:
@@ -802,16 +909,6 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
         with open(file2, 'w') as f:
                 f.write(f"{END}")
                 f.close()
-    try:
-        with open(file2, "r") as f:
-            line = f.readline().strip()
-        if line:
-            var5 = float(line.split()[0])
-        else:
-            var5 = float(0)
-    except FileNotFoundError: open(file2, "w").close()
-
-
 
 
 
@@ -861,8 +958,6 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
         position=str(mpv.command("get_property", "time-pos"))
         if float(position) >= float(END):
             mpv.command("set_property", "pause", True)
-            break
-        if float(position) < float(pao):
             break
         pao = float(position) 
         time.sleep(0.05)
@@ -989,6 +1084,7 @@ def _addShortcuts(shortcuts):
         (SHORTCUT_END1, lambda: remove_time("mpvanki-end")),
         (SHORTCUT_END2, lambda: add_time("mpvanki-end")),
         (ANSWER, lambda: ansae(ansa)),
+        (HALFSHOW, lambda: run_command_field()),
         (SHOWER, lambda: run_command_field(1))
     )
     shortcuts += additions
