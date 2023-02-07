@@ -80,22 +80,34 @@ limit ?"""
 
         return False
 
-from PyQt5.QtWidgets import QApplication, QFileDialog
 import platform
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+operating_system = platform.system()
+
+if operating_system == "Linux":
+    try:
+        with open(script_dir + "/ankivideo.log", "r") as f:
+            line = f.readline().strip()
+            global ankivideo
+            ankivideo = line.split()[0]
+    except:
+            with open(script_dir + "/ankivideo.log", 'w') as f:
+                    f.write(f"{script_dir}/")
+                    f.close()
 
 def videofilelocation():
-    operating_system = platform.system()
     if operating_system == "Windows":
         result = subprocess.run(["explorer.exe", "/select,", "."], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print(result.stdout.decode(), result.stderr.decode())
     elif operating_system == "Linux":
+        from PyQt5.QtWidgets import QApplication, QFileDialog
         directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
-        with open("ankivideo.log", 'w') as f:
-                f.write(f"{directory}")
+        with open(script_dir + "/ankivideo.log", 'w') as f:
+                f.write(f"{directory}/")
                 f.close()
-        with open("ankivideo.log", "r") as f:
+        with open(script_dir + "/ankivideo.log", "r") as f:
             line = f.readline().strip()
-            global ankivideo
             ankivideo = line.split()[0]
 
     else:
@@ -128,7 +140,6 @@ mw.form.menuTools.addAction(action2)
 ######################
 ######################
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
 
 def dueToday(): # formeeeeeeeeeee
     # Globals and reset variables
@@ -838,17 +849,8 @@ class MPV:
 ########################
 
 
-try:
-    with open("ankivideo.log", "r") as f:
-        line = f.readline().strip()
-        global ankivideo
-        ankivideo = line.split()[0]
-except:
-    with open("ankivideo.log", 'w') as f:
-            f.write(f"{script_dir}")
-            f.close()
-
 def time_in_seconds(time):
+    global ankivideo
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
@@ -860,8 +862,9 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
     if not v6:
         v6=0
 
-    file=script_dir +"/mpvanki.log"
-    file2=script_dir + os.path.basename(v1) +  "mpvanki.log"
+    if operating_system == "Linux":
+        file=script_dir +"/mpvanki.log"
+        file2=script_dir + "/savedata/" + os.path.basename(v1) +  "mpvanki.log"
 
     START=float(time_in_seconds(v2))
     END=float(time_in_seconds(v3))
