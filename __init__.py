@@ -85,16 +85,15 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 operating_system = platform.system()
 
-if operating_system == "Linux":
-    try:
-        with open(script_dir + "/ankivideo.log", "r") as f:
-            line = f.readline().strip()
-            global ankivideo
-            ankivideo = line.split()[0]
-    except:
-            with open(script_dir + "/ankivideo.log", 'w') as f:
-                    f.write(f"{script_dir}/")
-                    f.close()
+try:
+    with open(os.path.abspath(script_dir + "/ankivideo.log"), "r") as f:
+        line = f.readline().strip()
+        global ankivideo
+        ankivideo = os.path.abspath(line.split()[0])
+except:
+        with open(os.path.abspath(script_dir + "/ankivideo.log"), 'w') as f:
+                f.write(f"{script_dir}/")
+                f.close()
 
 def videofilelocation():
     if operating_system == "Windows":
@@ -103,10 +102,10 @@ def videofilelocation():
     elif operating_system == "Linux":
         from PyQt5.QtWidgets import QApplication, QFileDialog
         directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
-        with open(script_dir + "/ankivideo.log", 'w') as f:
+        with open(os.path.abspath(script_dir + "/ankivideo.log"), 'w') as f:
                 f.write(f"{directory}/")
                 f.close()
-        with open(script_dir + "/ankivideo.log", "r") as f:
+        with open(os.path.abspath(script_dir + "/ankivideo.log"), "r") as f:
             line = f.readline().strip()
             ankivideo = line.split()[0]
 
@@ -862,9 +861,8 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
     if not v6:
         v6=0
 
-    if operating_system == "Linux":
-        file=script_dir +"/mpvanki.log"
-        file2=script_dir + "/savedata/" + os.path.basename(v1) +  "mpvanki.log"
+    file=os.path.abspath(script_dir +"/mpvanki.log")
+    file2=os.path.abspath(script_dir + "/savedata/" + os.path.basename(v1) +  "mpvanki.log")
 
     START=float(time_in_seconds(v2))
     END=float(time_in_seconds(v3))
@@ -922,8 +920,8 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
 
 
     workingfile=str(mpv.command("get_property", "path"))
-    if str(workingfile) != ankivideo + v1:
-        mpv.command("loadfile", ankivideo + v1)
+    if os.path.abspath(str(workingfile)) != os.path.abspath(ankivideo + "/" + v1):
+        mpv.command("loadfile", os.path.abspath(ankivideo + "/" + v1))
 
     while True:
         stream=str(mpv.command("get_property", "stream-pos"))
