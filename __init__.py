@@ -43,9 +43,17 @@ import os
 from anki.hooks import wrap, addHook
 from anki import version as ankiversion
 import multiprocessing
+from threading import Thread
 from datetime import timedelta
 from aqt.qt import QToolTip, QCursor
 from anki.schedv2 import * 
+import sys
+class DevNull:
+    def write(self, msg):
+        pass
+
+sys.stderr = DevNull()
+
 
 ####################
 old_fillRev = anki.schedv2.Scheduler._fillRev
@@ -86,31 +94,26 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 operating_system = platform.system()
 
 try:
-    with open(os.path.abspath(script_dir + "/ankivideo.log"), "r") as f:
+    with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), "r") as f:
         line = f.readline().strip()
         global ankivideo
         ankivideo = os.path.abspath(line.split()[0])
 except:
-        with open(os.path.abspath(script_dir + "/ankivideo.log"), 'w') as f:
+        with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), 'w') as f:
                 f.write(f"{script_dir}/")
                 f.close()
 
 def videofilelocation():
-    if operating_system == "Windows":
-        result = subprocess.run(["explorer.exe", "/select,", "."], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(result.stdout.decode(), result.stderr.decode())
-    elif operating_system == "Linux":
-        from PyQt5.QtWidgets import QApplication, QFileDialog
-        directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
-        with open(os.path.abspath(script_dir + "/ankivideo.log"), 'w') as f:
-                f.write(f"{directory}/")
-                f.close()
-        with open(os.path.abspath(script_dir + "/ankivideo.log"), "r") as f:
-            line = f.readline().strip()
-            ankivideo = line.split()[0]
-
-    else:
-        print("Unsupported operating system")
+    from PyQt5.QtWidgets import QApplication, QFileDialog
+    directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
+    with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), 'w') as f:
+            f.write(f"{directory}/")
+            f.close()
+    with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), "r") as f:
+        line = f.readline().strip()
+        global ankivideo
+        ankivideo = line.split()[0]
+    quit()
 
 def created_order_on_off():
     if is_old_fillRev == True:
@@ -142,25 +145,26 @@ mw.form.menuTools.addAction(action2)
 
 def dueToday(): # formeeeeeeeeeee
     # Globals and reset variables
-    global dueMessage
-    dueCount = 0
+    if operating_system == "Linux":
+        global dueMessage
+        dueCount = 0
 
-    # Loop through deckDueTree to find cards due
-    for i in mw.col.sched.deckDueTree():
-        name, did, due, lrn, new, children = i
-        dueCount += due + lrn + new
+        # Loop through deckDueTree to find cards due
+        for i in mw.col.sched.deckDueTree():
+            name, did, due, lrn, new, children = i
+            dueCount += due + lrn + new
 
-    # Correct for single or no cards
-    if dueCount == 0:
-        dueMessage = "No cards left"
-        os.system("echo " + str(dueCount) + " > .cache/ankileft &" )
-    elif dueCount == 1:
-        dueMessage = "(" + str(dueCount) + " card left)"
-        os.system("echo " + str(dueCount) + " > .cache/ankileft &" )
-    else:
-        dueMessage = "(" + str(dueCount) + " cards left)"        
-        os.system("echo " + str(dueCount) + " > .cache/ankileft &" )
-    return dueMessage
+        # Correct for single or no cards
+        if dueCount == 0:
+            dueMessage = "No cards left"
+            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
+        elif dueCount == 1:
+            dueMessage = "(" + str(dueCount) + " card left)"
+            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
+        else:
+            dueMessage = "(" + str(dueCount) + " cards left)"        
+            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
+        return dueMessage
 
 
 def answer():
@@ -853,16 +857,29 @@ def time_in_seconds(time):
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
+def stoopu(when):
+    mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
+    while pao:
+        position=str(mpv.command("get_property", "time-pos"))
+        if float(position) >= float(when):
+            mpv.command("set_property", "pause", True)
+            break
+    mpv.terminate()
+
+global process2
+global pao
+pao = True
+process2 = True
 def mpvankii(v1, v2, v3, v4, v5, v6):
     global ankivideo
-    mpv = MPV(start_mpv=False, ipc_socket="/tmp/mpv-socket")
+    mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
     if not v5:
         v5=0
     if not v6:
         v6=0
 
-    file=os.path.abspath(script_dir +"/mpvanki.log")
-    file2=os.path.abspath(script_dir + "/savedata/" + os.path.basename(v1) +  "mpvanki.log")
+    file=os.path.abspath(os.path.join(script_dir, "mpvanki.log"))
+    file2=os.path.abspath(os.path.join(script_dir, "savedata", os.path.basename(v1) + "mpvanki.log"))
 
     START=float(time_in_seconds(v2))
     END=float(time_in_seconds(v3))
@@ -920,15 +937,15 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
 
 
     workingfile=str(mpv.command("get_property", "path"))
-    if os.path.abspath(str(workingfile)) != os.path.abspath(ankivideo + "/" + v1):
-        mpv.command("loadfile", os.path.abspath(ankivideo + "/" + v1))
-
-    while True:
-        stream=str(mpv.command("get_property", "stream-pos"))
-        try:
-            if int(stream) > 0:
-                break
-        except: pass
+    if os.path.abspath(str(workingfile)) != os.path.abspath(os.path.join(ankivideo, v1)):
+        mpv.command("loadfile", os.path.abspath(os.path.join(ankivideo, v1)))
+        if os.path.isfile(os.path.abspath(os.path.join(ankivideo, v1))):
+            while True:
+                stream=str(mpv.command("get_property", "stream-pos"))
+                try:
+                    if int(stream) > 0:
+                        break
+                except: pass
 ###
 
     if var1 == v1 and var4 == number - 1 and var3 < START: 
@@ -954,16 +971,29 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
             f.write(f"{END}")
             f.close()
 
-    pao = 0 
-    while True:
-        position=str(mpv.command("get_property", "time-pos"))
-        if float(position) >= float(END):
-            mpv.command("set_property", "pause", True)
-            break
-        pao = float(position) 
-        time.sleep(0.05)
-global process2
-process2 = 1
+
+    global process2
+    global pao
+    try:
+        if process2 != 1:
+            pao = False
+            process2.join()
+    except:
+        pass
+    try:
+        process = Thread(target=stoopu, args=(str(END),))
+        pao = True
+        process2 = process
+        process.start()
+    except:
+        pass
+
+
+
+
+
+
+
 def run_command_field(num=0):
     global ansa
     ansa = 3
@@ -991,17 +1021,12 @@ def run_command_field(num=0):
 #        else:
         global mpv
         try:
-            mpv = MPV(start_mpv=False, ipc_socket="/tmp/mpv-socket")
-            mpv.command("set_property", "sub-visibility", False)
+            mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
+            mpv.command("get_property", "stream-pos")
         except:
-            mpv = MPV(start_mpv=True, ipc_socket="/tmp/mpv-socket")
+            mpv = MPV(start_mpv=True, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
 
-        global process2
-        if process2 != 1:
-            process2.kill()
-        process = multiprocessing.Process(target=mpvankii, args=( note["mpvanki-filename"], note["mpvanki-start"], note["mpvanki-end"], note["mpvanki-number"], new, sub))
-        process2 = process
-        process.start()
+        mpvankii( note["mpvanki-filename"], note["mpvanki-start"], note["mpvanki-end"], note["mpvanki-number"], new, sub)
 
 
 
