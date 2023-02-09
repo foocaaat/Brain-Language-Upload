@@ -866,7 +866,7 @@ def stoopu(when):
         if float(position) >= float(when):
             mpv.command("set_property", "pause", True)
             break
-        time.sleep(0.1)
+        time.sleep(0.2)
     mpv.terminate()
 
 global process2
@@ -1103,16 +1103,6 @@ def remove_time(time_string):
 
 
 addHook("showAnswer", run_command_field)
-
-
-
-def _newKeyHandler(self, evt, _old):
-    """Add shortcuts on Anki 2.0.x"""
-    if evt.key() == QKeySequence(SHORTCUT_INCREMENTAL)[0]:
-        _showHint(incremental=True)
-    elif evt.key() == QKeySequence(SHOWER)[0]:
-        _showHint()
-    return _old(self, evt)
 
 def _addShortcuts(shortcuts):
     """Add shortcuts on Anki 2.1.x"""
