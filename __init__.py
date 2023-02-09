@@ -1038,6 +1038,11 @@ def ansae(ansa):
     mw.col.sched.answerCard(card, ansa)
     mw.reviewer.nextCard()
 
+
+
+
+
+from aqt.utils import tooltip
 def add_time(time_string):
     # Split the time string into hours, minutes, seconds, and milliseconds
     note = mw.reviewer.card.note()
@@ -1060,9 +1065,9 @@ def add_time(time_string):
     note[time_string] = new_time_string
     note.flush()
     if time_string == "mpvanki-start":
-        QToolTip.showText(QCursor.pos(), "-500ms >-------")
+        tooltip("-500ms →-----")
     if time_string == "mpvanki-end":
-        QToolTip.showText(QCursor.pos(), "+500ms ------->")
+        tooltip("+500ms -----→")
     run_command_field()
 
 
@@ -1091,9 +1096,9 @@ def remove_time(time_string):
     note[time_string] = new_time_string
     note.flush()
     if time_string == "mpvanki-start":
-        QToolTip.showText(QCursor.pos(), "+500ms <-------")
+        tooltip("+500ms ←-----")
     if time_string == "mpvanki-end":
-        QToolTip.showText(QCursor.pos(), "-500ms -------<")
+        tooltip("-500ms -----←")
     run_command_field()
 
 
