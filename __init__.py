@@ -910,25 +910,20 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
                 f.write(f"{v1} {START} {END} {number}")
                 f.close()
 
-    try:
-        with open(file2, "r") as f:
-            line = f.readline().strip()
-        if line:
-            var5 = float(line.split()[0])
-        else:
+    if v5 == "yes":
+        try:
+            with open(file2, "r") as f:
+                line = f.readline().strip()
+            if line:
+                var5 = float(line.split()[0])
+            else:
+                var5 = float(0)
+        except:
             var5 = float(0)
-    except:
-        with open(file2, 'w') as f:
-                f.write(f"{END}")
-                f.close()
 
     if not os.path.exists(file):
         with open(file, 'w') as f:
                 f.write(f"{v1} {START} {END} {number}")
-                f.close()
-    if not os.path.exists(file2):
-        with open(file2, 'w') as f:
-                f.write(f"{END}")
                 f.close()
 
 
@@ -970,9 +965,11 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
     with open(file, 'w') as f:
             f.write(f"{v1} {START} {END} {number}")
             f.close()
-    with open(file2, 'w') as f:
-            f.write(f"{END}")
-            f.close()
+
+    if v5 == "yes":
+        with open(file2, 'w') as f:
+                f.write(f"{END}")
+                f.close()
 
 
     global process2
@@ -1102,7 +1099,6 @@ def remove_time(time_string):
     run_command_field()
 
 
-addHook("showAnswer", run_command_field)
 
 def _addShortcuts(shortcuts):
     """Add shortcuts on Anki 2.1.x"""
@@ -1157,3 +1153,4 @@ if ankiversion.startswith("2.0"): # 2.0.x
         Reviewer._keyHandler, _newKeyHandler, "around")
 else: # 2.1.x
     addHook("reviewStateShortcuts", _addShortcuts)
+    addHook("showAnswer", run_command_field)
