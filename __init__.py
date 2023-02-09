@@ -22,6 +22,7 @@ SHORTCUT_START1 = "Z"
 SHORTCUT_START2 = "X"
 SHOWER = "Down"
 ANSWER = "Right"
+GOBACK = "Left"
 HALFSHOW = "Up"
 
 # Shortcut that will reveal all hint fields at once:
@@ -864,6 +865,7 @@ def stoopu(when):
         if float(position) >= float(when):
             mpv.command("set_property", "pause", True)
             break
+        time.sleep(0.1)
     mpv.terminate()
 
 global process2
@@ -1100,7 +1102,6 @@ def _newKeyHandler(self, evt, _old):
         _showHint()
     return _old(self, evt)
 
-
 def _addShortcuts(shortcuts):
     """Add shortcuts on Anki 2.1.x"""
     additions = (
@@ -1111,6 +1112,7 @@ def _addShortcuts(shortcuts):
         (SHORTCUT_END2, lambda: add_time("mpvanki-end")),
         (ANSWER, lambda: ansae(ansa)),
         (HALFSHOW, lambda: run_command_field()),
+        (GOBACK, lambda: mw.form.actionUndo.trigger()),
         (SHOWER, lambda: run_command_field(1))
     )
     shortcuts += additions
