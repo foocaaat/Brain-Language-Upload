@@ -18,18 +18,19 @@ from __future__ import unicode_literals
 
 # Shortcut that will reveal the hint fields one by one:
 SHORTCUT_INCREMENTAL = "R"
-SHORTCUT_START1 = "Z"
-SHORTCUT_START2 = "X"
 SHOWER = "Down"
 ANSWER = "Right"
 GOBACK = "Left"
 HALFSHOW = "Up"
 
 # Shortcut that will reveal all hint fields at once:
-ansa = 0
-SHORTCUT_END1 = ","
-SHORTCUT_END2 = "."
+SHORTCUT_START1 = ","
+SHORTCUT_START2 = "."
+SHORTCUT_END1 = "["
+SHORTCUT_END2 = "]"
 
+
+ansa = 0
 ##############  USER CONFIGURATION END  ##############
 
 from aqt.qt import *
@@ -1058,7 +1059,10 @@ def add_time(time_string):
 
     note[time_string] = new_time_string
     note.flush()
-    QToolTip.showText(QCursor.pos(), "Added 500 milliseconds from {} to become: {}".format(time_string, new_time_string))
+    if time_string == "mpvanki-start":
+        QToolTip.showText(QCursor.pos(), "-500ms >-------")
+    if time_string == "mpvanki-end":
+        QToolTip.showText(QCursor.pos(), "+500ms ------->")
     run_command_field()
 
 
@@ -1086,7 +1090,10 @@ def remove_time(time_string):
     # Update the note field with the new time
     note[time_string] = new_time_string
     note.flush()
-    QToolTip.showText(QCursor.pos(), "Removed 500 milliseconds from {} to become: {}".format(time_string, new_time_string))
+    if time_string == "mpvanki-start":
+        QToolTip.showText(QCursor.pos(), "+500ms <-------")
+    if time_string == "mpvanki-end":
+        QToolTip.showText(QCursor.pos(), "-500ms -------<")
     run_command_field()
 
 
