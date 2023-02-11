@@ -36,6 +36,7 @@ ansa = 0
 from aqt.qt import *
 from aqt import mw
 from aqt.reviewer import Reviewer
+import json
 import time
 from anki import hooks
 import anki
@@ -51,17 +52,45 @@ from aqt.qt import QToolTip, QCursor
 from anki.schedv2 import * 
 from aqt.utils import tooltip
 import sys
-class DevNull:
-    def write(self, msg):
-        pass
+#cjlass DevNull:
+#    def write(self, msg):
+#        pass
+#
+#sys.stderr = DevNull()
 
-sys.stderr = DevNull()
 
-
+script_dir = os.path.dirname(os.path.abspath(__file__))
 ####################
 old_fillRev = anki.schedv2.Scheduler._fillRev
 is_old_fillRev = True
 
+def jessygo(object_key, object_value):
+    # Load the JSON file
+    try:
+        with open(os.path.abspath(os.path.join(script_dir, "mpvanki.json")), "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        # If the file doesn't exist, create an empty dictionary
+        data = {}
+
+    # Add or update the object in the dictionary
+    data[object_key] = object_value
+
+    # Write the updated dictionary to the JSON file
+    with open(os.path.abspath(os.path.join(script_dir, "mpvanki.json")), "w") as file:
+        json.dump(data, file, indent=4)
+
+def jessycome(object_key):
+    # Load the JSON file
+    try:
+        with open(os.path.abspath(os.path.join(script_dir, "mpvanki.json")), "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        # If the file doesn't exist, return None
+        return None
+
+    # Return the value of the object
+    return data.get(object_key)
 
 def  new_fillRev(self, recursing=False) -> bool:
         "True if a review card can be fetched."
@@ -92,31 +121,19 @@ limit ?"""
         return False
 
 import platform
-script_dir = os.path.dirname(os.path.abspath(__file__))
 
 operating_system = platform.system()
 
 try:
-    with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), "r") as f:
-        line = f.readline().strip()
-        global ankivideo
-        ankivideo = os.path.abspath(line.split()[0])
+    ankivideo = jessycome("ankivideo") 
 except:
-        with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), 'w') as f:
-                f.write(f"{script_dir}/")
-                f.close()
+    jessygo("ankivideo", f"{script_dir}")
 
 def videofilelocation():
     from PyQt5.QtWidgets import QApplication, QFileDialog
     directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
-    with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), 'w') as f:
-            f.write(f"{directory}/")
-            f.close()
-    with open(os.path.abspath(os.path.join(script_dir, "ankivideo.log")), "r") as f:
-        line = f.readline().strip()
-        global ankivideo
-        ankivideo = line.split()[0]
-    quit()
+    jessygo("ankivideo", f"{directory}")
+    ankivideo = jessycome("ankivideo") 
 
 def created_order_on_off():
     if is_old_fillRev == True:
@@ -851,21 +868,17 @@ class MPV:
 
 
 def time_in_seconds(time):
-    global ankivideo
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
 import multiprocessing
 def mpvankii(v1, v2, v3, v4, v5, v6):
-    global ankivideo
+    ankivideo = str(jessycome("ankivideo"))
     mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
     if not v5:
         v5=0
     if not v6:
         v6=0
-
-    file=os.path.abspath(os.path.join(script_dir, "mpvanki.json"))
-    file2=os.path.abspath(os.path.join(script_dir, "savedata", os.path.basename(v1) + "mpvanki.log"))
 
     START=float(time_in_seconds(v2))
     END=float(time_in_seconds(v3))
@@ -878,38 +891,17 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
 
 
     global var1,var2,var3,var4,var5
-
+    var1 = jessycome("var1") 
+    var2 = str(jessycome("var2")) 
+    var3 = str(jessycome("var3"))
+    var4 = jessycome("var4") 
     try:
-        with open(file, "r") as f:
-            data = json.load(f)
-        var1 = data["var1"]
-        var2 = data["var2"]
-        var3 = data["var3"]
-        var4 = data["var4"]
+        if v5 == "yes":
+            var5 = float(jessycome(str(v1)))
     except:
-        data = {
-            "var1": v1,
-            "var2": START,
-            "var3": END,
-            "var4": number
-        }
-        json.dump(data, open(file, 'w'))
+        jessygo(str(v1),END) 
+        var5 = float(jessycome(str(v1)))
 
-    if v5 == "yes":
-        try:
-            with open(file2, "r") as f:
-                line = f.readline().strip()
-            if line:
-                var5 = float(line.split()[0])
-            else:
-                var5 = float(0)
-        except:
-            var5 = float(0)
-
-    if not os.path.exists(file):
-        with open(file, 'w') as f:
-                f.write(f"{v1} {START} {END} {number}")
-                f.close()
 
 
 
@@ -931,13 +923,13 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
                 except: pass
 ###
 
-    if var1 == v1 and var4 == number - 1 and var3 < START: 
+    if var1 == v1 and var4 == number - 1 and float(var3) < START: 
         pass
     else:
         if v5 == "yes" and number == 1 and var4 != 1:
             mpv.command("seek", 0, "absolute")
         else:
-            if v5 == "yes" and var5 < START and var5 != 0.0:
+            if v5 == "yes" and float(var5) < START and var5 != 0.0:
 
                 mpv.command("seek", str(var5), "absolute")
             else:
@@ -949,18 +941,13 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
 # 2. Update json object
 # 3. Write json file
 
-    data = {
-        "var1": v1,
-        "var2": START,
-        "var3": END,
-        "var4": number
-    }
-    json.dump(data, open(file, 'w'))
+    jessygo("var1",v1) 
+    jessygo("var2",START) 
+    jessygo("var3",END) 
+    jessygo("var4",number) 
 
     if v5 == "yes":
-        with open(file2, 'w') as f:
-                f.write(f"{END}")
-                f.close()
+        jessygo(str(v1),END) 
 
 
 
