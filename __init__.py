@@ -49,6 +49,7 @@ from threading import Thread
 from datetime import timedelta
 from aqt.qt import QToolTip, QCursor
 from anki.schedv2 import * 
+from aqt.utils import tooltip
 import sys
 class DevNull:
     def write(self, msg):
@@ -157,16 +158,8 @@ def dueToday(): # formeeeeeeeeeee
             dueCount += due + lrn + new
 
         # Correct for single or no cards
-        if dueCount == 0:
-            dueMessage = "No cards left"
-            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
-        elif dueCount == 1:
-            dueMessage = "(" + str(dueCount) + " card left)"
-            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
-        else:
-            dueMessage = "(" + str(dueCount) + " cards left)"        
-            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
-        return dueMessage
+        os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
+        tooltip(dueCount)
 
 
 def answer():
@@ -357,7 +350,10 @@ class UnixSocket(threading.Thread):
         data = b''
         try:
             while True:
-                current_data = self.socket.recv(1024)
+                try:
+                    current_data = self.socket.recv(1024)
+                except:
+                    pass
                 if current_data == b'':
                     break
 
@@ -859,20 +855,7 @@ def time_in_seconds(time):
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
-def stoopu(when):
-    mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
-    while pao:
-        position=str(mpv.command("get_property", "time-pos"))
-        if float(position) >= float(when):
-            mpv.command("set_property", "pause", True)
-            break
-        time.sleep(0.2)
-    mpv.terminate()
-
-global process2
-global pao
-pao = True
-process2 = True
+import multiprocessing
 def mpvankii(v1, v2, v3, v4, v5, v6):
     global ankivideo
     mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
@@ -881,34 +864,36 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
     if not v6:
         v6=0
 
-    file=os.path.abspath(os.path.join(script_dir, "mpvanki.log"))
+    file=os.path.abspath(os.path.join(script_dir, "mpvanki.json"))
     file2=os.path.abspath(os.path.join(script_dir, "savedata", os.path.basename(v1) + "mpvanki.log"))
 
     START=float(time_in_seconds(v2))
     END=float(time_in_seconds(v3))
-    number = int(str(v4).lstrip("0"))
+    try:
+        number = int(str(v4).lstrip("0"))
+    except:
+        number = int(999)
 
 
 
 
     global var1,var2,var3,var4,var5
+
     try:
         with open(file, "r") as f:
-            line = f.readline().strip()
-        if line:
-            var1 = line.split()[0]
-            var2 = float(line.split()[1])
-            var3 = float(line.split()[2])
-            var4 = int(line.split()[3])
-        else:
-            var1 = float(0)
-            var2 = float(0)
-            var3 = float(0)
-            var4 = int(0)
+            data = json.load(f)
+        var1 = data["var1"]
+        var2 = data["var2"]
+        var3 = data["var3"]
+        var4 = data["var4"]
     except:
-        with open(file, 'w') as f:
-                f.write(f"{v1} {START} {END} {number}")
-                f.close()
+        data = {
+            "var1": v1,
+            "var2": START,
+            "var3": END,
+            "var4": number
+        }
+        json.dump(data, open(file, 'w'))
 
     if v5 == "yes":
         try:
@@ -961,10 +946,16 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
     mpv.command("set_property", "pause", False)
 
     
+# 2. Update json object
+# 3. Write json file
 
-    with open(file, 'w') as f:
-            f.write(f"{v1} {START} {END} {number}")
-            f.close()
+    data = {
+        "var1": v1,
+        "var2": START,
+        "var3": END,
+        "var4": number
+    }
+    json.dump(data, open(file, 'w'))
 
     if v5 == "yes":
         with open(file2, 'w') as f:
@@ -972,27 +963,32 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
                 f.close()
 
 
-    global process2
-    global pao
-    try:
-        if process2 != 1:
-            pao = False
-            process2.join()
-    except:
-        pass
-    try:
-        process = Thread(target=stoopu, args=(str(END),))
-        pao = True
-        process2 = process
-        process.start()
-    except:
-        pass
+
+    process = threading.Thread(target=stoopu, args=(str(END),))
+    process.start()
 
 
 
-
-
-
+def stoopu(when):
+    ct = 0
+    while True:
+        if str(mpv.command("get_property", "time-pos")) != 'None':
+            if ct != 0:
+                if -0.1 > float(str(mpv.command("get_property", "time-pos"))) - float(ct):
+                    print(1)
+                    break
+                elif float(str(mpv.command("get_property", "time-pos"))) - float(ct) > 0.3:
+                    print(2)
+                    break
+                else:
+                    ct = float(str(mpv.command("get_property", "time-pos")))
+                if float(str(mpv.command("get_property", "time-pos"))) >= float(when):
+                    print(3)
+                    mpv.command("set_property", "pause", True)
+                    break
+            ct = float(str(mpv.command("get_property", "time-pos")))
+        time.sleep(0.05)
+    print("done")
 
 def run_command_field(num=0):
     global ansa
@@ -1015,13 +1011,11 @@ def run_command_field(num=0):
     note = mw.reviewer.card.note()
     # Check if a field called "Command" exists
     if "mpvanki-filename" in note:
-        dueToday()  # formeeeeeeeeeee
 #        if num == 1:
 #            os.system("mpvanki " + command + " e &")
 #        else:
         global mpv
         try:
-            mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
             mpv.command("get_property", "stream-pos")
         except:
             mpv = MPV(start_mpv=True, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
@@ -1031,6 +1025,7 @@ def run_command_field(num=0):
 
 
 def ansae(ansa):
+    dueToday()  # formeeeeeeeeeee
     card = mw.reviewer.card
     mw.col.sched.answerCard(card, ansa)
     mw.reviewer.nextCard()
@@ -1039,7 +1034,6 @@ def ansae(ansa):
 
 
 
-from aqt.utils import tooltip
 def add_time(time_string):
     # Split the time string into hours, minutes, seconds, and milliseconds
     note = mw.reviewer.card.note()
@@ -1148,9 +1142,9 @@ def _showHint(incremental=False):
 
 # Hooks and Patches
 
+addHook("showAnswer", run_command_field)
 if ankiversion.startswith("2.0"): # 2.0.x
     Reviewer._keyHandler = wrap(
         Reviewer._keyHandler, _newKeyHandler, "around")
 else: # 2.1.x
     addHook("reviewStateShortcuts", _addShortcuts)
-    addHook("showAnswer", run_command_field)
