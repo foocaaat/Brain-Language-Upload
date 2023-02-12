@@ -17,7 +17,6 @@ from __future__ import unicode_literals
 # Key combinations are supported on Anki 2.1.x
 
 # Shortcut that will reveal the hint fields one by one:
-SHORTCUT_INCREMENTAL = "R"
 SHOWER = "Down"
 ANSWER = "Right"
 GOBACK = "Left"
@@ -42,19 +41,22 @@ import anki
 import os
 from anki.hooks import wrap, addHook
 from anki import version as ankiversion
+from aqt.import_export.importing import import_file
 import threading
 from datetime import timedelta
 from anki.schedv2 import * 
 from aqt.utils import tooltip
-from . import python_mpv_jsonipc
-MPV = python_mpv_jsonipc.MPV
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from python_mpv_jsonipc import MPV
+from pysubs2 import SSAFile
+
 
 ###############
-import sys
-class DevNull:
-    def write(self, msg):
-        pass
-sys.stderr = DevNull()
+#class DevNull:
+#    def write(self, msg):
+#        pass
+#sys.stderr = DevNull()
 ###################
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -96,8 +98,103 @@ def jessycome(object_key):
 
 
 
+def millis_to_time_format(milliseconds):
+    milliseconds = int(milliseconds)
+    seconds, milliseconds = divmod(milliseconds, 1000)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    return '{:01d}.{:02d}.{:02d}.{:03d}'.format(hours, minutes, seconds, milliseconds)
+
+def extract_timestamps(file):
+    subs = SSAFile.load(file)
+    timestamps = []
+    added = set()
+    start2 = 0
+    end2 = 0
+    for line in subs:
+        start0 = int(line.start)
+        end0 = int(line.end)
+        start = int(line.start - 500)
+        end = int(line.end + 500)
+        if start < 0:
+            start = 0
+        startt = millis_to_time_format(start)
+        endd = millis_to_time_format(end)
+        timestamp = f"{startt} - {endd}"
+        if timestamp not in added:
+            if end0 - start0 > 100:
+                if start0 >= end2:
+                    added.add(timestamp)
+                    end2 = end0
+                    timestamps.append((f"{startt}", f"{endd}"))
+    return timestamps
 
 
+def assemble(*mkve):
+    tempy = os.path.join(str(ankivideo),"tmp.srt") 
+    for file in mkve:
+        src_video_paths = []
+        filey = file
+        file = os.path.join(str(ankivideo), file)
+        if file.endswith('mkv'):
+            src_video_paths.append(file)
+        for src_video_path in src_video_paths:
+            tete = os.popen("ffprobe -v error -select_streams s -show_entries stream=index,codec_name:stream_tags=NUMBER_OF_BYTES-eng,NUMBER_OF_BYTES,language -of default=noprint_wrappers=1 -print_format csv " + src_video_path ).read()
+
+
+
+            try:
+                filty = sorted(tete.splitlines(), key=lambda x: int(x.split(',')[-1]), reverse=True)
+                filty = '\n'.join(filty)
+            except:
+                tooltip("i don't feel soo good")
+                filty = tete
+
+            lines = filty.splitlines()
+            filtered_lines = [line for line in lines if "ass" in line or "srt" in line or "subrip" in line]
+            filty = '\n'.join(filtered_lines)
+
+            filty = '\n'.join(line.split(',')[1] for line in filty.splitlines())
+            tete = int(filty.splitlines()[0])
+
+
+
+
+            os.system(f'mkvextract {src_video_path} tracks {tete}:{tempy}\n')
+            os.system(f'pysubs2 --to srt {tempy}')
+        timestamps = extract_timestamps(tempy)
+        os.remove(tempy)
+        counter = 0
+        with open(os.path.join(str(ankivideo), 'timestamps.txt') , 'a') as f:
+            for start, end in timestamps:
+                counter += 1
+                formatted_counter = str(counter).zfill(5)
+                f.write(f"{filey}{formatted_counter}	{filey}	{start}	{end}	{formatted_counter}\n")
+
+        try:
+            liste = list(jessycome("filelist"))
+        except:
+            liste = []
+        liste.append(filey)
+        jessygo("filelist", liste)
+
+def find_missing_items(list1, list2):
+    missing_items = []
+    for item in list1:
+        if item not in list2:
+            missing_items.append(item)
+    return missing_items
+def get_filenames(folder):
+    exclude_list = jessycome("filelist")
+    if not exclude_list:
+        exclude_list = []
+    all_files = os.listdir(folder)
+    missing = find_missing_items(exclude_list, all_files)
+    if missing != []:
+        tooltip(f"missing files : {missing}")
+    result = [f for f in all_files if f.endswith('.mkv') and f not in exclude_list]
+    result.sort()
+    return result
 
 def  new_fillRev(self, recursing=False) -> bool:
         "True if a review card can be fetched."
@@ -151,15 +248,38 @@ def created_order_on_off():
         is_old_fillRev == True
 
 created_order_on_off()
+
+
+def addnewstuff():
+    be = get_filenames(ankivideo)
+    tooltip("please wait because i didn't make a progress bar")
+    time.sleep(2)
+    if be == []:
+        tooltip("i dont sniff ankything new")
+        if os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "timestamps.txt"))):
+            import_file(mw, os.path.join(str(ankivideo), 'timestamps.txt'))
+        return
+    try:
+        if os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "timestamps.txt"))):
+            os.remove(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "timestamps.txt")))
+        tooltip("wait please becuase i didn't make a progress bar")
+        assemble(*be)
+    except:
+        tooltip("i sniff a non comactable mkv")
+        return
+
 # create a new menu item, "test"
 action = QAction("On - Off Review Created Order", mw)
 action2 = QAction("Select videos location", mw)
+action3 = QAction("turn new videos to srs", mw)
 # set it to call testFunction when it's clicked
 action.triggered.connect(created_order_on_off)
 action2.triggered.connect(videofilelocation)
+action3.triggered.connect(addnewstuff)
 # and add it to the tools menu
 mw.form.menuTools.addAction(action)
 mw.form.menuTools.addAction(action2)
+mw.form.menuTools.addAction(action3)
 
 
 
@@ -398,7 +518,6 @@ def remove_time(time_string):
 def _addShortcuts(shortcuts):
     """Add shortcuts on Anki 2.1.x"""
     additions = (
-        (SHORTCUT_INCREMENTAL, lambda: run_command_field(1)),
         (SHORTCUT_START1, lambda: remove_time("mpvanki-start")),
         (SHORTCUT_START2, lambda: add_time("mpvanki-start")),
         (SHORTCUT_END1, lambda: remove_time("mpvanki-end")),
