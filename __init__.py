@@ -37,6 +37,7 @@ from aqt import mw
 from aqt.reviewer import Reviewer
 import json
 import time
+from aqt import gui_hooks
 import anki
 import os
 from anki.hooks import wrap, addHook
@@ -308,7 +309,9 @@ def time_in_seconds(time):
     h, m, s, ms = map(int, time.split('.'))
     total_seconds = (h * 3600) + (m * 60) + s
     return "{}.{}".format(total_seconds, ms)
-import multiprocessing
+global stopa
+stopa = []
+stopan = -1
 def mpvankii(v1, v2, v3, v4, v5, v6):
     ankivideo = str(jessycome("ankivideo"))
     mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
@@ -384,30 +387,33 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
         jessygo(str(v1),END) 
 
 
-
+    global stopan
+    global stopa
+    try:
+        stopa[-1] = False
+    except:
+        pass
+    stopan += 1
+    stopa.append(True)
     process = threading.Thread(target=stoopu, args=(str(END),))
     process.start()
 
-
-
 def stoopu(when):
-    ct = 0
+    global stopan
+    global stopa
+    soso = stopan 
     while True:
         if str(mpv.command("get_property", "time-pos")) != 'None':
-            if ct != 0:
-                if -0.1 > float(str(mpv.command("get_property", "time-pos"))) - float(ct):
-                    print(1)
-                    break
-                elif float(str(mpv.command("get_property", "time-pos"))) - float(ct) > 0.3:
+                if not stopa[soso]:
                     print(2)
                     break
-                else:
-                    ct = float(str(mpv.command("get_property", "time-pos")))
-                if float(str(mpv.command("get_property", "time-pos"))) >= float(when):
+                elif 0 <= float(str(mpv.command("get_property", "time-pos"))) - float(when) <= 0.5:
+                    if not stopa[soso]:
+                        print(2)
+                        break
                     print(3)
                     mpv.command("set_property", "pause", True)
                     break
-            ct = float(str(mpv.command("get_property", "time-pos")))
         time.sleep(0.05)
     print("done")
 
@@ -450,9 +456,7 @@ def ansae(ansa):
     card = mw.reviewer.card
     mw.col.sched.answerCard(card, ansa)
     mw.reviewer.nextCard()
-
-
-
+    mw.update_undo_actions()
 
 
 def add_time(time_string):
@@ -514,7 +518,6 @@ def remove_time(time_string):
     run_command_field()
 
 
-
 def _addShortcuts(shortcuts):
     """Add shortcuts on Anki 2.1.x"""
     additions = (
@@ -561,10 +564,10 @@ def _showHint(incremental=False):
 
 
 # Hooks and Patches
-
-addHook("showAnswer", run_command_field)
+gui_hooks.reviewer_did_show_question.append(run_command_field)
 if ankiversion.startswith("2.0"): # 2.0.x
     Reviewer._keyHandler = wrap(
         Reviewer._keyHandler, _newKeyHandler, "around")
 else: # 2.1.x
     addHook("reviewStateShortcuts", _addShortcuts)
+
