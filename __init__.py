@@ -40,6 +40,7 @@ import time
 from aqt import gui_hooks
 import anki
 import os
+import subprocess
 from anki.hooks import wrap, addHook
 from anki import version as ankiversion
 from aqt.import_export.importing import import_file
@@ -51,6 +52,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from python_mpv_jsonipc import MPV
 from pysubs2 import SSAFile
+import pysubs2
+from PyQt5.QtWidgets import QApplication, QFileDialog
+
 
 
 ###############
@@ -158,15 +162,16 @@ def assemble(*mkve):
             filty = '\n'.join(line.split(',')[1] for line in filty.splitlines())
             tete = int(filty.splitlines()[0])
 
-
-
-
             os.system(f'mkvextract {src_video_path} tracks {tete}:{tempy}\n')
-            os.system(f'pysubs2 --to srt {tempy}')
+            subs = pysubs2.load(tempy)
+            subs.save(tempy, format="srt")
         timestamps = extract_timestamps(tempy)
         os.remove(tempy)
         counter = 0
-        with open(os.path.join(str(ankivideo), 'timestamps.txt') , 'a') as f:
+
+        if not os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp"))):
+            os.makedirs(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+        with open(os.path.join(str(ankivideo), 'stamp/timestamps.txt') , 'a') as f:
             for start, end in timestamps:
                 counter += 1
                 formatted_counter = str(counter).zfill(5)
@@ -235,8 +240,9 @@ except:
     jessygo("ankivideo", f"{script_dir}")
 
 def videofilelocation():
-    from PyQt5.QtWidgets import QApplication, QFileDialog
     directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
+    if not directory:
+        return
     jessygo("ankivideo", f"{directory}")
     ankivideo = jessycome("ankivideo") 
 
@@ -250,23 +256,40 @@ def created_order_on_off():
 
 created_order_on_off()
 
+if operating_system == "Windows":
+    windows_dir = os.path.join(script_dir, "windows")
+    path = os.environ.get("PATH", "")
+    if windows_dir not in path:
+        os.environ["PATH"] = windows_dir + os.pathsep + path
 
 def addnewstuff():
+    global ankivideo
+    ankivideo = jessycome("ankivideo") 
+    if not os.path.exists(os.path.abspath(str(jessycome("ankivideo")))):
+        tooltip("select the folder maan")
+    if os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp/timestamps.txt"))):
+        tooltip("move the timestamp.txt out of the way to make a new one")
+        if platform.system() == "Windows":
+            os.startfile(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+        else:
+            os.system('xdg-open "%s" &' % os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+            return
     be = get_filenames(ankivideo)
     tooltip("please wait because i didn't make a progress bar")
     time.sleep(2)
     if be == []:
         tooltip("i dont sniff ankything new")
-        if os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "timestamps.txt"))):
-            import_file(mw, os.path.join(str(ankivideo), 'timestamps.txt'))
         return
     try:
-        if os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "timestamps.txt"))):
-            os.remove(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "timestamps.txt")))
-        tooltip("wait please becuase i didn't make a progress bar")
         assemble(*be)
+        tooltip("doneee")
+        if platform.system() == "Windows":
+            os.startfile(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+        else:
+            os.system('xdg-open "%s" &' % os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+            return
     except:
-        tooltip("i sniff a non comactable mkv")
+        tooltip("i sniff a non combatable mkv")
         return
 
 # create a new menu item, "test"
