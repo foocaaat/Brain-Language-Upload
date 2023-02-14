@@ -267,6 +267,7 @@ def addnewstuff():
     ankivideo = jessycome("ankivideo") 
     if not os.path.exists(os.path.abspath(str(jessycome("ankivideo")))):
         tooltip("select the folder maan")
+        return
     if os.path.exists(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp/timestamps.txt"))):
         tooltip("move the timestamp.txt out of the way to make a new one")
         if platform.system() == "Windows":
@@ -337,6 +338,10 @@ stopa = []
 stopan = -1
 def mpvankii(v1, v2, v3, v4, v5, v6):
     ankivideo = str(jessycome("ankivideo"))
+    os.path.abspath(os.path.join(ankivideo, v1))
+    if not os.path.exists(os.path.abspath(os.path.join(ankivideo, v1))):
+        tooltip("the file is not in the folder")
+        return
     mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
     if not v5:
         v5=0
