@@ -15,7 +15,7 @@
   <li><strong>Right:</strong> Grade the card as again or good based on if you showed the subtitles or not</li>
   <li><strong>Left:</strong> Undo</li>
 </ul>
-<p>NOTE:that when the card is new, whether you saw the subtitles or not, it is graded as good.</p>
+<p>NOTE: that when the card is new, whether you saw the subtitles or not, it is graded as good.</p>
 <h4>Timestamp Editing</h4>
 <p>If there is unsynced or chopped speech, Binge-Studying has timestamp editing features that let you manually edit the timestamps:</p>
 <ul>
