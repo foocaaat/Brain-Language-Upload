@@ -36,3 +36,4 @@
 <h3>Daily Review Order</h3>
 <p>Binge-Studying changes the daily review order to be in creation date. When reviewing old cards, it will be like rewatching your shows but skipping the sentences that you already know.</p>
 <h3>Card Type</h3>
+<p>The Binge-Studying card type doesn't have a front, only a back card. The back card displays the text from the subtitles, along with the audio file of the selected timestamp. When reviewing a card, the audio file will play automatically and you can listen to the speech with or without subtitles. </p>
