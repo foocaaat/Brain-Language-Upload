@@ -267,7 +267,6 @@ def ofolder(where):
     return
 
 
-#        ofolder(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
 def addnewstuff():
     global sniff
     sniff = []
@@ -294,6 +293,7 @@ def addnewstuff():
         tooltip(f"i sniff a non combatable mkv: {sniff}")
     ofolder(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
 
+addnewstuff()
 def videofilelocation():
     directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
     if not directory:
