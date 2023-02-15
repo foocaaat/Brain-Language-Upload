@@ -31,13 +31,13 @@
 
 <h2>Getting Started</h2>
 <p>Here's how to get started with Binge-Studying:</p>
-<h3>Step 1: Select Video Location</h3>
+<h4>Step 1: Select Video Location:</h4>
 <p>Go to tools and then press "Select Video Location." Select the folder where all the MKV files will be stored.</p>
-<h3>Step 2: Turn New Videos into SRS</h3>
+<h4>Step 2: Turn New Videos into SRS:</h4>
 <p>Go to tools and then press "Turn New Videos into SRS." Wait for the process to complete.</p>
-<h3>Step 3: Add Example Deck</h3>
+<h4>Step 3: Add Example Deck:</h4>
 <p>Add the example deck, which has the card type and styling, to your Anki deck.</p>
-<h3>Step 4: Create a New Deck</h3>
+<h4>Step 4: Create a New Deck:</h4>
 <p>Create a new deck with any name.</p>
-<h3>Step 5: Import Cards</h3>
+<h4>Step 5: Import Cards:</h4>
 <p>Make sure you selected the card type "Binge-Studying-Card," then import the card.</p>
