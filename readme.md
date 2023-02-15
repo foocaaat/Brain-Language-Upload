@@ -5,6 +5,7 @@
 <h3>Timestamps and Subtitles</h3>
 <p>Binge-Studying works by you putting "mkv" files inside a folder you choose and then getting timestamps from where speech happens in mkv TV series or film or anything that has subtitles. Then, it creates a txt file inside a stamp folder, which opens after the timestamps have been gathered. You can drag it to Anki to add your deck, and the addon has great watching MPV functionality.</p>
 <h3>Custom Shortcuts</h3>
+<h5>Navigation</h5>
 <p>Binge-Studying comes with custom shortcuts that you can use for easy grading:</p>
 <ul>
   <li><strong>Up:</strong> Play timestamp without subtitles</li>
@@ -13,7 +14,7 @@
   <li><strong>Left:</strong> Undo</li>
 </ul>
 <p>Note that when the card is new, whether you saw the subtitles or not, it is graded as good.</p>
-<h3>Timestamp Editing</h3>
+<h5>Timestamp Editing</h5>
 <p>If there is unsynced or chopped speech, Binge-Studying has timestamp editing features that let you manually edit the timestamps:</p>
 <ul>
   <li><strong>,</strong>: Set timestamp back 100ms at the start-position</li>
