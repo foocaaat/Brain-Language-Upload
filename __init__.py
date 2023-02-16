@@ -42,6 +42,7 @@ import anki
 import os
 import subprocess
 from anki.hooks import wrap, addHook
+from aqt.operations import QueryOp
 from anki import version as ankiversion
 from aqt.import_export.importing import import_file
 import threading
@@ -50,6 +51,7 @@ from anki.schedv2 import *
 import platform
 operating_system = platform.system()
 from aqt.utils import tooltip
+from aqt.utils import showInfo
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from python_mpv_jsonipc import MPV
@@ -57,14 +59,12 @@ from pysubs2 import SSAFile
 import pysubs2
 from PyQt5.QtWidgets import QApplication, QFileDialog
 
-
-
 ###############
-#class DevNull:
-#    def write(self, msg):
-#        pass
-#sys.stderr = DevNull()
-###################
+class DevNull:
+    def write(self, msg):
+        pass
+sys.stderr = DevNull()
+##################
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 old_fillRev = anki.schedv2.Scheduler._fillRev
@@ -189,7 +189,8 @@ def assemble(mkve, stampa):
         if file.endswith('mkv'):
             src_video_paths.append(file)
         for src_video_path in src_video_paths:
-            tete = os.popen("ffprobe -v error -select_streams s -show_entries stream=index,codec_name:stream_tags=NUMBER_OF_BYTES-eng,NUMBER_OF_BYTES,language -of default=noprint_wrappers=1 -print_format csv '" + src_video_path + "'" ).read()
+            command = ['ffprobe', '-v', 'error', '-select_streams', 's', '-show_entries', 'stream=index,codec_name:stream_tags=NUMBER_OF_BYTES-eng,NUMBER_OF_BYTES,language', '-of', 'default=noprint_wrappers=1', '-print_format', 'csv', src_video_path]
+            tete = subprocess.check_output(command).decode()
 
 
 
@@ -197,7 +198,7 @@ def assemble(mkve, stampa):
                 filty = sorted(tete.splitlines(), key=lambda x: int(x.split(',')[-1]), reverse=True)
                 filty = '\n'.join(filty)
             except:
-                tooltip("i don't feel soo good")
+                pass
                 filty = tete
 
             lines = filty.splitlines()
@@ -267,33 +268,63 @@ def ofolder(where):
     return
 
 
-def addnewstuff():
+def addnewstuff(number=0):
     global sniff
     sniff = []
     global ankivideo
     ankivideo = jessycome("ankivideo") 
     if not os.path.exists(os.path.abspath(str(jessycome("ankivideo")))):
-        tooltip("select the folder maan")
+        if jessycome("speeed"):
+            subprocess.Popen(['mpv', '--no-config', '--terminal', os.path.join(script_dir, "speeed", 'selectfolder.wav')])
+        else:
+            showInfo("make sure you selected the video folder")
         return
     be = synclist()
-    time.sleep(2)
-    for thing in be:
-        if os.path.isdir(os.path.abspath(os.path.join(str(jessycome("ankivideo")), thing))):
-            thingss = filesinside(os.path.abspath(os.path.join(str(jessycome("ankivideo")), thing)))
-            thingss = [os.path.join(thing, name) for name in thingss]
-            print(f"folder {thingss}")
-            assemble(thingss, thing)
-            tooltip("doneee")
-        if os.path.isfile(os.path.abspath(os.path.join(str(jessycome("ankivideo")), thing + ".mkv"))):
-            thing = thing + ".mkv"
-            print(f"file {thing}")
-            assemble([thing], thing)
-            tooltip("doneee")
-    if sniff != []:
-        tooltip(f"i sniff a non combatable mkv: {sniff}")
-    ofolder(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+    if be != []:
+        if jessycome("speeed"):
+            subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'startimport.wav')])
+        else:
+            showInfo("there are some files that are going to be imported")
+    else:
+        if number == 0:
+            if jessycome("speeed"):
+                subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'nonewfile.wav')])
+            else:
+                showInfo("there are no new files")
+            return
 
-addnewstuff()
+    def my_background_op(be) -> int:
+        for thing in be:
+            if os.path.isdir(os.path.abspath(os.path.join(str(jessycome("ankivideo")), thing))):
+                thingss = filesinside(os.path.abspath(os.path.join(str(jessycome("ankivideo")), thing)))
+                thingss = [os.path.join(thing, name) for name in thingss]
+                print(f"folder {thingss}")
+                assemble(thingss, thing)
+            if os.path.isfile(os.path.abspath(os.path.join(str(jessycome("ankivideo")), thing + ".mkv"))):
+                thing = thing + ".mkv"
+                print(f"file {thing}")
+                assemble([thing], thing)
+
+        return len(be)
+
+    def on_success(count: int) -> None:
+        mw.progress.finish()
+        if count > 0:
+            ofolder(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
+            if jessycome("speeed"):
+                subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'done.wav')])
+            else:
+                showInfo("the files are locked and loaded")
+        if sniff != []:
+            showInfo(f"i sniff a non combatable mkv: {sniff}")
+
+    op = QueryOp(parent=mw, op=lambda col: my_background_op(be), success=on_success)
+    op.with_progress().run_in_background()
+
+def on_anki_startup():
+    addnewstuff(1)
+
+
 def videofilelocation():
     directory = QFileDialog.getExistingDirectory(None, "Select Directory", "./")
     if not directory:
@@ -303,7 +334,13 @@ def videofilelocation():
 try:
     ankivideo = jessycome("ankivideo") 
 except:
-    tooltip("add the folder maaan")
+    try:
+        if jessycome("speeed"):
+            subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'selectfolder.wav')])
+        else:
+            showInfo("make sure you selected the video folder")
+    except:
+        pass
 
 # create a new menu item, "test"
 action = QAction("On - Off Review Created Order", mw)
@@ -350,7 +387,13 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
     ankivideo = str(jessycome("ankivideo"))
     os.path.abspath(os.path.join(ankivideo, v1))
     if not os.path.exists(os.path.abspath(os.path.join(ankivideo, v1))):
-        tooltip("the file is not in the folder")
+        try:
+            if jessycome("speeed"):
+                subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'notinthefolder.wav')])
+            else:
+                tooltip("the file is not in the folder")
+        except:
+            pass
         return
     mpv = MPV(start_mpv=False, ipc_socket=os.path.abspath("/tmp/mpv-socket"))
     if not v5:
@@ -561,3 +604,4 @@ if ankiversion.startswith("2.0"): # 2.0.x
         Reviewer._keyHandler, _newKeyHandler, "around")
 else: # 2.1.x
     addHook("reviewStateShortcuts", _addShortcuts)
+    addHook("profileLoaded", on_anki_startup)
