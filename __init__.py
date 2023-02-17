@@ -369,7 +369,10 @@ def dueToday(): # formeeeeeeeeeee
 
     # Correct for single or no cards
     if operating_system == "Linux":
-        os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
+        try:
+            os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
+        except:
+            pass
     tooltip(dueCount)
 
 
