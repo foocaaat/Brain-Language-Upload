@@ -359,18 +359,18 @@ mw.form.menuTools.addAction(action3)
 
 def dueToday(): # formeeeeeeeeeee
     # Globals and reset variables
+    global dueMessage
+    dueCount = 0
+
+    # Loop through deckDueTree to find cards due
+    for i in mw.col.sched.deckDueTree():
+        name, did, due, lrn, new, children = i
+        dueCount += due + lrn + new
+
+    # Correct for single or no cards
     if operating_system == "Linux":
-        global dueMessage
-        dueCount = 0
-
-        # Loop through deckDueTree to find cards due
-        for i in mw.col.sched.deckDueTree():
-            name, did, due, lrn, new, children = i
-            dueCount += due + lrn + new
-
-        # Correct for single or no cards
         os.system("echo " + str(dueCount) + " > " + os.path.join("$HOME/.cache", "ankileft") + " &" )
-        tooltip(dueCount)
+    tooltip(dueCount)
 
 
 
