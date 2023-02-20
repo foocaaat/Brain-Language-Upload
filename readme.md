@@ -1,7 +1,14 @@
 <h1>Binge-Studying? (Turn Language Study into a Captivating Watching Experience)</h1>
 <h2>Overview</h2>
 <p>Do you find it hard to stay focused while studying a new language? Binge-Studying is an Anki addon that turns language study into a captivating watching experience. With this addon, you can study your favorite TV shows, movies, or any other video content with subtitles, and turn them into a language learning opportunity.</p>
-<iframe src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/video.mp4">
+
+
+
+
+https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-9929-7d35fd3cda1d.mp4
+
+
+
 <h2>Features</h2>
 <h3>MPV Playing Functionality</h3>
 <p>Binge-Studying's MPV functionality allows for an uninterrupted, enjoyable watching experience. The addon detects timestamps and plays selected speech sections from the beginning, making language learning easy and effortless.</p>
