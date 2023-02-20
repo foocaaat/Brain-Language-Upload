@@ -280,20 +280,20 @@ def addnewstuff(number=0):
         if jessycome("speeed"):
             subprocess.Popen(['mpv', '--no-config', '--terminal', os.path.join(script_dir, "speeed", 'selectfolder.wav')])
         else:
-            showInfo("make sure you selected the video folder")
+            showInfo("Make sure you selected the video folder.")
         return
     be = synclist()
     if be != []:
         if jessycome("speeed"):
             subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'startimport.wav')])
         else:
-            showInfo("there are some files that are going to be imported")
+            showInfo("There are some files that are going to be imported.")
     else:
         if number == 0:
             if jessycome("speeed"):
                 subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'nonewfile.wav')])
             else:
-                showInfo("there are no new files")
+                showInfo("There are no new files.")
             return
 
     def my_background_op(be) -> int:
@@ -317,9 +317,9 @@ def addnewstuff(number=0):
             if jessycome("speeed"):
                 subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'done.wav')])
             else:
-                showInfo("the files are locked and loaded")
+                showInfo("The files are locked and loaded.")
         if sniff != []:
-            showInfo(f"i sniff a non combatable mkv: {sniff}")
+            showInfo(f"I sniff a non-compatible mkv: {sniff}.")
 
     op = QueryOp(parent=mw, op=lambda col: my_background_op(be), success=on_success)
     op.with_progress().run_in_background()
@@ -339,7 +339,7 @@ def on_anki_startup():
     except:
         progre.append("mkvextract")
     if progre != []:
-        showInfo(f"Next step is to download these programs and set them as environment variables.\n {progre} \n You can use your favorite package manager to do that or just go to this links... \n https://mpv.io/installation/ \n https://ffbinaries.com/downloads \n https://sourceforge.net/projects/gmkvextractgui/")
+        showInfo(f"Next step is to download these programs and set them as environment variables:\n {progre} \n You can use your favorite package manager to do that or just go to these links: \n https://mpv.io/installation/ \n https://ffbinaries.com/downloads \n https://sourceforge.net/projects/gmkvextractgui/")
     addnewstuff(1)
 
 
@@ -357,14 +357,14 @@ except:
         if jessycome("speeed"):
             subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'selectfolder.wav')])
         else:
-            showInfo("make sure you selected the video folder")
+            showInfo("Make sure you selected the video folder.")
     except:
         pass
 
 # create a new menu item, "test"
-action = QAction("On - Off Review Created Order", mw)
-action2 = QAction("Select videos location", mw)
-action3 = QAction("turn new videos to srs", mw)
+action = QAction("Review Created Order", mw)
+action2 = QAction("Select Videos Location", mw)
+action3 = QAction("Turn New Videos to SRS", mw)
 # set it to call testFunction when it's clicked
 action.triggered.connect(createdorderset)
 action2.triggered.connect(videofilelocation)
