@@ -2,9 +2,9 @@
 <h2>Overview</h2>
 <p>
 <ul>
-<li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in the Right order, Always. (except for da red cards)</li>
- <br>
-<li>The add-on will be like: rewatching your content but the skipping and Focuing is on your weaknesses, so no "valuable" time used on sentence mineing, instead immerseing more easliy with the (best language mpv setup i have ever seen myself) </li>
+<li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in the Right order, Always. (aside from da red cards)/li>
+ <br>
+<li>The add-on will be similar to rewatching your content, but the skipping and focusing will be on your weaknesses, so no "valuable" time will be spent on sentence mining, instead immersing yourself in the material more easily with the: (best language mpv setup i have ever seen myself) </li>
 <br>
 <li>There is Only "one side to the cards" The user sees clips, Addon will automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are Confident enought that you understand (which is good)</li>
 </ul>
