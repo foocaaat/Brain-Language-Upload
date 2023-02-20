@@ -1,6 +1,6 @@
 <h1>Binge-Studying? (Turn Language Study into a Captivating Watching Experience)</h1>
 <h2>Overview</h2>
-<p>Do you find it hard to stay focused while studying a new language? Binge-Studying is an Anki addon that turns language study into a captivating watching experience. With this addon, you can study your favorite TV shows, movies, or any other video content with subtitles, and turn them into a language learning opportunity.</p>
+<p>This addon alters how Anki is used, with only a back card that contains a spoken clip graded as good or bad depending on subtitle usage. It encourages learners to avoid subtitles, relying instead on contextual clues from the story to improve retention of vocabulary and sentence recall.</p>
 
 
 
