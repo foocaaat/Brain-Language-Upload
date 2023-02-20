@@ -21,19 +21,19 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <h4>Navigation</h4>
 <p>Binge-Studying comes with custom shortcuts that you can use for easy grading:</p>
 <ul>
-  <li><strong>Up:</strong> Play timestamp without subtitles</li>
-  <li><strong>Down:</strong> Play timestamp with subtitles</li>
-  <li><strong>Right:</strong> Grade the card as again or good based on if you showed the subtitles or not</li>
-  <li><strong>Left:</strong> Undo</li>
+  <li><strong>Up :</strong> Play timestamp without subtitles</li>
+  <li><strong>Down :</strong> Play timestamp with subtitles</li>
+  <li><strong>Right :</strong> Grade the card as again or good based on if you showed the subtitles or not</li>
+  <li><strong>Left :</strong> Undo</li>
 </ul>
 <p>NOTE: that when the card is new, whether you saw the subtitles or not, it is graded as good.</p>
 <h4>Timestamp Editing</h4>
 <p>If there is unsynced or chopped speech, Binge-Studying has timestamp editing features that let you manually edit the timestamps:</p>
 <ul>
-  <li><strong>,</strong>: Set timestamp back 100ms at the start-position</li>
-  <li><strong>.</strong>: Set timestamp forward 100ms at the start-position</li>
-  <li><strong>[</strong>: Set timestamp back 100ms at the end-position</li>
-  <li><strong>]</strong>: Set timestamp forward 100ms at the end-position</li>
+  <li><strong>, :</strong> Set timestamp back 100ms at the start-position</li>
+  <li><strong>. :</strong> Set timestamp forward 100ms at the start-position</li>
+  <li><strong>[ :</strong> Set timestamp back 100ms at the end-position</li>
+  <li><strong>] :</strong> Set timestamp forward 100ms at the end-position</li>
 </ul>
 <h3>Daily Review Order</h3>
 <p>Binge-Studying changes the daily review order to be in creation date. When reviewing old cards, it will be like rewatching your shows but skipping the sentences that you already know.</p>
