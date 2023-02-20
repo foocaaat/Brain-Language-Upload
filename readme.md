@@ -66,4 +66,4 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <h4>Step 5: Import Cards:</h4>
 <p>Make sure you selected the card type "Binge-Studying-Card," then import the card.</p>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/dragtxt.gif">
-
+<p>there is a tiny blue easter egg find it if you can<p>
