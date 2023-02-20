@@ -8,7 +8,10 @@
 https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-9929-7d35fd3cda1d.mp4
 
 
-
+<h2>Reqirements </h2>
+  <li><strong>mpv</strong></li>
+  <li><strong>ffprobe</strong></li>
+  <li><strong>mkvextract</strong></li>
 <h2>Features</h2>
 <h3>MPV Playing Functionality</h3>
 <p>Binge-Studying's MPV functionality allows for an uninterrupted, enjoyable watching experience. The addon detects timestamps and plays selected speech sections from the beginning, making language learning easy and effortless.</p>
