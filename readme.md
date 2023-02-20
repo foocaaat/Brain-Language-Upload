@@ -3,11 +3,10 @@
 <p>
 <ul>
 <li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in sequence by the media player MPV.</li>
-  
+  <br>
 <li>The user sees clips and automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are confident enought that you understand</li>
-
+<br>
  <li>This Anki add-on aims to help language learners improve their listening and comprehension skills by watching content without relying on subtitles.</li>
-
 </ul>
 </p>
 
