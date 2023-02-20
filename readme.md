@@ -55,7 +55,7 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <p>Go to tools and then press "Select Video Location." Select the folder where all the MKV files will be stored.</p>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/videofolder.gif">
 <h4>Step 2: Turn New Videos into SRS:</h4>
-<p>Go to tools and then press "Turn New Videos into SRS." Wait for the process to complete.</p>
+<p>Go to tools and then press "Turn New Videos into SRS." Wait for the process to complete. (i added a loading screen dw)</p>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/timestamps.gif">
 <h4>Step 3: Add Example Deck:</h4>
 <p>Add the example deck, which has the card type and styling, to your Anki deck.</p>
