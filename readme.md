@@ -1,4 +1,4 @@
-<h1>Timestamp Auto Sentence Mine</h1>
+<h1>Timestamp Auto Sentence Mine to eliminate needs for subtitles</h1>
 <h2>Overview</h2>
 <p>This addon alters how Anki is used, with only a back card that contains timestamps of spoken parts from "mkv" files. that are generated automatically without storing data and they are graded as good or bad depending weather you saw the subtitle or not. It encourages learners to avoid subtitles, relying instead on contextual clues from the story to improve retention of vocabulary and sentence recall.</p>
 
