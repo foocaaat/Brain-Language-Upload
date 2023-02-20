@@ -9,6 +9,7 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 
 
 <h2>Reqirements </h2>
+<h3>These programs need to be set as environment variables.</h3>
   <li><strong>mpv</strong></li>
   <li><strong>ffprobe</strong></li>
   <li><strong>mkvextract</strong></li>
