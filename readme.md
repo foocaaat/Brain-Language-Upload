@@ -2,7 +2,7 @@
 <h2>Overview</h2>
 <p>
 <ul>
-<li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in sequence by the media player MPV.</li>
+<li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in the Right order, Always. (except red ones)</li>
  <br>
 <li>There is Only "one side to the cards" The user sees clips, Addon will automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are Confident enought that you understand</li>
 <br>
