@@ -4,9 +4,9 @@
 <ul>
 <li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in the Right order, Always. (except red ones)</li>
  <br>
-<li>There is Only "one side to the cards" The user sees clips, Addon will automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are Confident enought that you understand</li>
+<li>The add-on will be like: rewatching your content but the skipping and Focuing is on your weaknesses, so no "valuable" time used on sentence mineing, instead immerseing more easliy with the (best language mpv setup i have ever seen myself) </li>
 <br>
- <li>This Anki add-on aims on making you watch content without relying on subtitles, And, minimize language learning time so instead of watching and Then sentence mine you can just watch the the senteneces will be relavent to your weaknesses</li>
+<li>There is Only "one side to the cards" The user sees clips, Addon will automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are Confident enought that you understand (which is good)</li>
 </ul>
 </p>
 
