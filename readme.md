@@ -1,6 +1,13 @@
 <h1>NEW Timestamp Auto Sentence Mine (helps you "not" look at subtitles)</h1>
 <h2>Overview</h2>
-<p>This Anki add-on aims to help language learners improve their listening and comprehension skills by watching Content without relying on subtitles. The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts, which are played in sequence by the media player MPV. The user can grade the cards as good or bad depending on whether they understood the spoken parts without subtitles. this is an experimental way to immerse in a language without having to mine sentences or words or grammer.</p>
+<p>
+<ul>
+<li>This Anki add-on aims to help language learners improve their listening and comprehension skills by watching content without relying on subtitles.</li>
+<li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in sequence by the media player MPV.</li>
+<li>The user can grade the cards as good or bad depending on whether they have seen subtitles.</li>
+<li>The focus is on using an experimental way to immerse in a language without having to mine sentences, words, or grammar.</li>
+</ul>
+</p>
 
 
 
