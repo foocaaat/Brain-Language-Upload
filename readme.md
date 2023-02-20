@@ -4,9 +4,9 @@
 <ul>
 <li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in sequence by the media player MPV.</li>
  <br>
-<li>There is ONLY "one side to the cards" The user sees clips and automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are confident enought that you understand</li>
+<li>There is ONLY "one side to the cards" The user sees clips, Addon will automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are confident enought that you understand</li>
 <br>
-<li>i believe this is a good method to not waste time sentence mine and just watch stuff<li>
+ <li>This Anki add-on aims to help language learners improve their listening and comprehension skills by watching content without relying on subtitles.</li>
 </ul>
 </p>
 
@@ -66,4 +66,4 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <h4>Step 5: Import Cards:</h4>
 <p>Make sure you selected the card type "Binge-Studying-Card," then import the card.</p>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/dragtxt.gif">
- <li>This Anki add-on aims to help language learners improve their listening and comprehension skills by watching content without relying on subtitles.</li>
+
