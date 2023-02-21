@@ -60,10 +60,10 @@ import pysubs2
 from PyQt5.QtWidgets import QApplication, QFileDialog
 
 ###############
-#class DevNull:
-#    def write(self, msg):
-#        pass
-#sys.stderr = DevNull()
+class DevNull:
+    def write(self, msg):
+        pass
+sys.stderr = DevNull()
 ###################
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
