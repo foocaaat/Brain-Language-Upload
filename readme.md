@@ -2,7 +2,7 @@
 <h2>Overview</h2>
 <p>
 <ul>
-<li>The add-on uses "mkv" files to automatically generate back cards with timestamps of spoken parts. These cards are played in the Right order, Always. (aside from da red cards)</li>
+<li>The add-on uses "mkv" files to automatically generate back cards with timestamps (not makeing new clip files) of spoken parts. These cards are played in the Right order, Always. (aside from da red cards)</li>
  <br>
 <li>The add-on will be similar to rewatching your content, but the skipping and focusing will be on your weaknesses, so no "valuable" time will be spent on sentence mining, instead immersing yourself in the material more easily with the: (best language mpv setup i have ever seen myself) </li>
 <br>
