@@ -59,6 +59,7 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/timestamps.gif">
 <h4>Step 3: Add Example Deck:</h4>
 Add the example deck, which has the card type and styling, to your Anki deck.
+<br>
 https://github.com/foocaaat/Brain-Language-Upload/raw/main/preview/bingey.apkg
 <br>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/dragcardtype.gif">
