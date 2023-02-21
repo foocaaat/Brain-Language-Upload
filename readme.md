@@ -5,9 +5,9 @@
 <li>You put 'mkv' files, it will output timestamps instructions to Anki and it will be played in the right order, (aside from da red cards)
 </li>
  <br>
-<li>The add-on will be similar to rewatching your content, but the skipping and focusing will be on your weaknesses, so no "valuable" time will be spent on sentence mining, instead immersing yourself in the material more easily with the: (best language mpv setup i have ever seen myself) </li>
+<li>It will be similar to rewatching your shows, but it skips easy stuff and focuses on your weaknesses, so no "valuable" time is used on sentence mining, instead immersing more with the (smartest MPV setup I have ever seen myself).</li>
 <br>
-<li>There is Only "one side to the cards" The user sees clips, Addon will automatically grade cards as good or bad depending on "whether they have seen subtitles." so you won't see the sub if you are Confident enought that you understand (which is good)</li>
+<li>There is Only "one side to the cards", The user watches and the Addon will automatically grade cards as good or bad based on "whether they have seen subtitles." so you won't see the sub if you are Confident enought that you understand (which is good)</li>
 </ul>
 </p>
 
