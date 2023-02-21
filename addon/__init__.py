@@ -60,11 +60,11 @@ import pysubs2
 from PyQt5.QtWidgets import QApplication, QFileDialog
 
 ###############
-class DevNull:
-    def write(self, msg):
-        pass
-sys.stderr = DevNull()
-##################
+#class DevNull:
+#    def write(self, msg):
+#        pass
+#sys.stderr = DevNull()
+###################
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 old_fillRev = anki.schedv2.Scheduler._fillRev
@@ -579,10 +579,10 @@ def add_time(time_string, nu):
     if time_string == "mpvanki-end":
         if nu == 1:
             tooltip("+100ms -----→")
-            new_time2 = current_time - timedelta(milliseconds=150)
+            new_time2 = current_time - timedelta(milliseconds=500)
         else:
             tooltip("-100ms -----←")
-            new_time2 = current_time - timedelta(milliseconds=250)
+            new_time2 = current_time - timedelta(milliseconds=550)
         new_time_string2 = "{:01d}.{:02d}.{:02d}.{:03d}".format(new_time2.seconds//3600, (new_time2.seconds//60)%60, new_time2.seconds%60, new_time2.microseconds//1000)
 
         global mpv
