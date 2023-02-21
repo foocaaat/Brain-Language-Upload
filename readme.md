@@ -2,7 +2,7 @@
 <h2>Overview</h2>
 <p>
 <ul>
-<li>You put 'mkv' files, it will output timestamps instructions to Anki and it will be played in the right order, (aside from da red cards)
+<li>You put 'mkv' files, it will output timestamps instructions to Anki/mpv and it will be played in the right order, (aside from da red cards)
 </li>
  <br>
 <li>It will be similar to rewatching your shows, but it skips easy stuff and focuses on your weaknesses, so no "valuable" time is used on sentence mining, instead immersing more with the (smartest MPV setup I have ever seen myself).</li>
