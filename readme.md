@@ -1,4 +1,4 @@
-<h1>NEW Timestamp Auto Sentence Mine (helps you "not" look at subtitles)</h1>
+<h1>NEW Video Language Learning without Pain (helps you "not" look at subtitles)</h1>
 <h2>Overview</h2>
 <p>
 <ul>
