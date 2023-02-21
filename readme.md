@@ -58,8 +58,8 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <p>Go to tools and then press "Turn New Videos into SRS." Wait for the process to complete. (i added a loading screen dw)</p>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/timestamps.gif">
 <h4>Step 3: Add Example Deck:</h4>
-<p>Add the example deck, which has the card type and styling, to your Anki deck.
-https://github.com/foocaaat/Brain-Language-Upload/raw/main/preview/bingey.apkg</p>
+Add the example deck, which has the card type and styling, to your Anki deck.
+https://github.com/foocaaat/Brain-Language-Upload/raw/main/preview/bingey.apkg
 <br>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/dragcardtype.gif">
 <h4>Step 4: Create a New Deck:</h4>
