@@ -54,20 +54,20 @@ https://user-images.githubusercontent.com/68251294/220138670-9d0245e7-7e20-487e-
 <p>Here's how to get started with Binge-Studying:</p>
 <h4>Step 1: Select Video Location:</h4>
 <p>Go to tools and then press "Select Video Location." Select the folder where all the MKV files will be stored.</p>
-<img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/videofolder.gif">
+<img src="https://imgur.com/zFskOmu.gif">
 <h4>Step 2: Turn New Videos into SRS:</h4>
 <p>Go to tools and then press "Turn New Videos into SRS." Wait for the process to complete. (i added a loading screen dw)</p>
-<img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/timestamps.gif">
+<img src="https://imgur.com/XTh5sSf.gif">
 <h4>Step 3: Add Example Deck:</h4>
 Add the example deck, which has the card type and styling, to your Anki deck.
 <br>
 https://github.com/foocaaat/Brain-Language-Upload/raw/main/preview/bingey.apkg
 <br><br>
-<img src="https://imgur.com/hVGVTkt">
+<img src="https://imgur.com/hVGVTkt.gif">
 <h4>Step 4: Create a New Deck:</h4>
 <p>Create a new deck with any name.</p>
-<img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/makedeck.gif">
+<img src="https://imgur.com/px2UuIy.gif">
 <h4>Step 5: Import Cards:</h4>
 <p>Make sure you selected the card type "Binge-Studying-Card," then import the card.</p>
-<img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/dragtxt.gif">
-<p>there is a tiny blue easter egg find it if you can<p>
+<img src="https://imgur.com/Yv821de.gif">
+<p>there is a tiny blue easter egg you won't find it<p>
