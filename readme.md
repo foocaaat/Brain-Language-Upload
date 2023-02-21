@@ -63,7 +63,7 @@ Add the example deck, which has the card type and styling, to your Anki deck.
 <br>
 https://github.com/foocaaat/Brain-Language-Upload/raw/main/preview/bingey.apkg
 <br><br>
-<img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/dragcardtype.gif">
+<img src="https://imgur.com/hVGVTkt">
 <h4>Step 4: Create a New Deck:</h4>
 <p>Create a new deck with any name.</p>
 <img src="https://github.com/foocaaat/Brain-Language-Upload/blob/main/preview/makedeck.gif">
