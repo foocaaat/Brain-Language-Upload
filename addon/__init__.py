@@ -60,10 +60,10 @@ import pysubs2
 from PyQt5.QtWidgets import QApplication, QFileDialog
 
 ###############
-class DevNull:
-    def write(self, msg):
-        pass
-sys.stderr = DevNull()
+#class DevNull:
+#    def write(self, msg):
+#        pass
+#sys.stderr = DevNull()
 ###################
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -136,10 +136,10 @@ def createdorder(number):
             showInfo("Creation Order: Enabled")
 
 def createdorderset():
-    if jessycome("order") == "False":
-        jessygo("order", "True")
-    else:
+    if jessycome("order") == "True":
         jessygo("order", "False")
+    else:
+        jessygo("order", "True")
     createdorder(0)
 
 createdorder(1)
@@ -197,25 +197,6 @@ def assemble(mkve, stampa):
 
 
 
-            try:
-                filty = sorted(tete.splitlines(), key=lambda x: int(x.split(',')[-1]), reverse=True)
-                filty = '\n'.join(filty)
-            except:
-                pass
-                filty = tete
-
-            lines = filty.splitlines()
-            filtered_lines = [line for line in lines if "ass" in line or "srt" in line or "subrip" in line]
-            filty = '\n'.join(filtered_lines)
-
-            tete = '\n'.join(line.split(',')[1] for line in filty.splitlines())
-            try:
-                tete = int(tete.splitlines()[0])
-            except:
-                global sniff
-                sniff.append(file)
-                return
-            os.system(f'mkvextract "{src_video_path}" tracks {tete}:{tempy}\n')
             subs = pysubs2.load(tempy)
             subs.save(tempy, format="srt")
         timestamps = extract_timestamps(tempy)
@@ -559,30 +540,56 @@ def add_time(time_string, nu):
     seconds = int(time_parts[2])
     milliseconds = int(time_parts[3])
 
+    
+    if time_string == "mpvanki-start":
+        t2ime_string2 = note["mpvanki-end"]
+    if time_string == "mpvanki-end":
+        t2ime_string2 = note["mpvanki-start"]
+    t2ime_parts = t2ime_string2.split('.')
+    h2ours = int(t2ime_parts[0])
+    m2inutes = int(t2ime_parts[1])
+    s2econds = int(t2ime_parts[2])
+    m2illiseconds = int(t2ime_parts[3])
+
+    c2urrent_time = timedelta(hours=h2ours, minutes=m2inutes, seconds=s2econds, milliseconds=m2illiseconds)
+
     # Create a timedelta object with the current time
     current_time = timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     # Add 500 milliseconds to the current time
-    if nu == 1: new_time = current_time + timedelta(milliseconds=50)
-    else: new_time = current_time - timedelta(milliseconds=50)
+    if nu == 1: new_time = current_time + timedelta(milliseconds=500)
+    else: new_time = current_time - timedelta(milliseconds=500)
 
     # Format the new time into a string
     new_time_string = "{:01d}.{:02d}.{:02d}.{:03d}".format(new_time.seconds//3600, (new_time.seconds//60)%60, new_time.seconds%60, new_time.microseconds//1000)
+    total_seconds = new_time.seconds + new_time.microseconds/1000000
+    formatted_time = "{:.3f}".format(total_seconds).replace(".", ".")
+        
+    total_seconds = c2urrent_time.seconds + c2urrent_time.microseconds/1000000
+    f2ormatted_time = "{:.3f}".format(total_seconds).replace(".", ".")
 
+    if time_string == "mpvanki-start":
+        if float(formatted_time) > float(f2ormatted_time):
+                tooltip("no can do")
+                return
+    if time_string == "mpvanki-end":
+        if float(formatted_time) < float(f2ormatted_time):
+                tooltip("no can do")
+                return
     note[time_string] = new_time_string
     note.flush()
 
     if time_string == "mpvanki-start":
-        if nu == 1: tooltip("-100ms →-----")
-        else: tooltip("+100ms ←-----")
+        if nu == 1: tooltip("-500ms →-----")
+        else: tooltip("+500ms ←-----")
         run_command_field()
     if time_string == "mpvanki-end":
         if nu == 1:
-            tooltip("+100ms -----→")
-            new_time2 = current_time - timedelta(milliseconds=500)
+            tooltip("+500ms -----→")
+            new_time2 = current_time - timedelta(milliseconds=1000)
         else:
-            tooltip("-100ms -----←")
-            new_time2 = current_time - timedelta(milliseconds=550)
+            tooltip("-500ms -----←")
+            new_time2 = current_time - timedelta(milliseconds=1500)
         new_time_string2 = "{:01d}.{:02d}.{:02d}.{:03d}".format(new_time2.seconds//3600, (new_time2.seconds//60)%60, new_time2.seconds%60, new_time2.microseconds//1000)
 
         global mpv
