@@ -258,23 +258,14 @@ def addnewstuff(number=0):
     global ankivideo
     ankivideo = jessycome("ankivideo") 
     if not os.path.exists(os.path.abspath(str(jessycome("ankivideo")))):
-        if jessycome("speeed"):
-            subprocess.Popen(['mpv', '--no-config', '--terminal', os.path.join(script_dir, "speeed", 'selectfolder.wav')])
-        else:
-            showInfo("Make sure you selected the video folder.")
+        showInfo("Make sure you selected the video folder.")
         return
     be = synclist()
     if be != []:
-        if jessycome("speeed"):
-            subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'startimport.wav')])
-        else:
-            showInfo("There are some files that are going to be imported.")
+        showInfo("There are some files that are going to be imported.")
     else:
         if number == 0:
-            if jessycome("speeed"):
-                subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'nonewfile.wav')])
-            else:
-                showInfo("There are no new files.")
+            showInfo("There are no new files.")
             return
 
     def my_background_op(be) -> int:
@@ -295,10 +286,7 @@ def addnewstuff(number=0):
         mw.progress.finish()
         if count > 0:
             ofolder(os.path.abspath(os.path.join(str(jessycome("ankivideo")), "stamp")))
-            if jessycome("speeed"):
-                subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'done.wav')])
-            else:
-                showInfo("The files are locked and loaded.")
+            showInfo("The files are locked and loaded.")
         if sniff != []:
             showInfo(f"I sniff a non-compatible mkv: {sniff}.")
 
@@ -335,10 +323,7 @@ try:
     ankivideo = jessycome("ankivideo") 
 except:
     try:
-        if jessycome("speeed"):
-            subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'selectfolder.wav')])
-        else:
-            showInfo("Make sure you selected the video folder.")
+        showInfo("Make sure you selected the video folder.")
     except:
         pass
 
@@ -380,14 +365,12 @@ global stopa
 stopa = []
 stopan = -1
 def mpvankii(v1, v2, v3, v4, v5, v6):
+    dueToday()
     ankivideo = str(jessycome("ankivideo"))
     os.path.abspath(os.path.join(ankivideo, v1))
     if not os.path.exists(os.path.abspath(os.path.join(ankivideo, v1))):
         try:
-            if jessycome("speeed"):
-                subprocess.Popen(['mpv', '--no-config', '--terminal',os.path.join(script_dir, "speeed", 'notinthefolder.wav')])
-            else:
-                tooltip("the file is not in the folder")
+            tooltip("the file is not in the folder")
         except:
             pass
         return
@@ -437,14 +420,13 @@ def mpvankii(v1, v2, v3, v4, v5, v6):
                 except: pass
 ###
 
-    if var1 == v1 and var4 == number - 1 and float(var3) < START: 
+    if var1 == v1 and var4 == number - 1 and float(var3) < START and v5 == "yes": 
         pass
     else:
         if v5 == "yes" and number == 1 and var4 != 1:
             mpv.command("seek", 0, "absolute")
         else:
             if v5 == "yes" and float(var5) < START and var5 != 0.0:
-
                 mpv.command("seek", str(var5), "absolute")
             else:
                 mpv.command("seek", str(START), "absolute")
@@ -494,9 +476,11 @@ def stoopu(when):
         time.sleep(0.05)
     print("done")
 
-def run_command_field(num=0):
+def run_command_field(num):
     global ansa
-    ansa = 3
+    if num != 1 and num != 2:
+        ansa = 3
+        print("hmm")
 
     if mw.reviewer.card.queue == 0:
         new = "yes"
@@ -504,6 +488,7 @@ def run_command_field(num=0):
         new = "no"
         if num == 1:
             ansa = 1
+
 
     # Get the current note
     sub = "0"
@@ -582,7 +567,7 @@ def add_time(time_string, nu):
     if time_string == "mpvanki-start":
         if nu == 1: tooltip("-500ms →-----")
         else: tooltip("+500ms ←-----")
-        run_command_field()
+        run_command_field(2)
     if time_string == "mpvanki-end":
         if nu == 1:
             tooltip("+500ms -----→")
@@ -609,7 +594,7 @@ def _addShortcuts(shortcuts):
         (SHORTCUT_END1, lambda: add_time("mpvanki-end", 0)),
         (SHORTCUT_END2, lambda: add_time("mpvanki-end", 1)),
         (ANSWER, lambda: ansae(ansa)),
-        (HALFSHOW, lambda: run_command_field()),
+        (HALFSHOW, lambda: run_command_field(2)),
         (GOBACK, lambda: mw.form.actionUndo.trigger()),
         (SHOWER, lambda: run_command_field(1))
     )
